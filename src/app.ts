@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
+import { Character } from './Character'
 
 /**
  * Extracts the name argument from the command line.
@@ -14,6 +15,43 @@ import readlineSync from 'readline-sync'
  */
 export function parseArgs(argv: string[]): string | undefined {
   return argv[0]
+}
+
+function chooseDemoFighter(){
+  console.log("Here are the demo character that can be coosen from")
+  console.log("1. Fighter")
+  console.log("2. Mage")
+  console.log("3. Exit to main menu")
+
+  const demoCharacterChoice = readlineSync.question("Enter your choice: ")
+  switch (demoCharacterChoice) {
+    case "1":
+      createDemoCharacter("Fighter")
+      break
+    case "2":
+      createDemoCharacter("Mage")
+      break
+    case "3":
+      return;
+      break
+    default:
+      console.log("Invalid choice. Please try again.")
+      break
+  }
+}
+
+function createDemoCharacter(choiceOfCharacter): void {
+  switch (choiceOfCharacter) {
+    case "Fighter" :
+      let character = new Character("Human", "Fighter",/*Magic number hp*/ 100,/*Magic number speed*/ 2, /*Magic number armor*/ */ 2, /*set good stats for fighter */ 16, 14, 16, 8, 6, 5, "Neutral Good", "Male")
+      break
+    case "Mage" :
+      let character = new Character("Human", "Mage",/*Magic number hp*/ 80,/*Magic number speed*/ 2, /*Magic number armor*/ */ 1, /*set good stats for mage */ 8, 14, 10, 16, 12, 10, "Neutral Good", "Male")
+      break
+    default:
+      console.log("Invalid character choice.")
+      break
+  }
 }
 
 
@@ -32,7 +70,7 @@ function getStartMenuChoice(): string {
         console.log("Starting character creation...")
         break
       case "2":
-        console.log("Loading demo character...")
+        
         break
       case "3":
         console.log("Exiting game...")
@@ -42,10 +80,6 @@ function getStartMenuChoice(): string {
         throw new Error("Invalid choice")
     }
     return startMenuChoice
-}
-
-function createDemoCharacter(): void {
-    console.log("Creating demo character...")
 }
 
 /**
