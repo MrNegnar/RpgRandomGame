@@ -7,7 +7,7 @@ export abstract class Character {
   private maxHealth: number;
   private currentHitPoints: number;
   private speed: number;
-  private armorClass: number;
+  private armor: number;
   private strength: number;
   private dexterity: number;
   private constitution: number;
@@ -18,12 +18,12 @@ export abstract class Character {
   private gender: Gender;
   private equipment: Equipment[];
 
-  constructor(Race: race, Class: class, maxHealth: number, speed: number, armorClass: number, strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, charisma: number, alignment: Alignment, gender: Gender) {
+  constructor(Race: race, Class: class, maxHealth: number, speed: number, armor: number, strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, charisma: number, alignment: Alignment, gender: Gender) {
     this.race = Race
     this.class = Class
     this.maxHealth = maxHealth
     this.speed = speed
-    this.armorClass = armorClass
+    this.armor = armor
     this.strength = strength
     this.dexterity = dexterity
     this.constitution = constitution
@@ -111,5 +111,11 @@ export abstract class Character {
 
   }
 
-  
+  private changeAlignment (Alignment: alignment) {
+
+  }
+
+  private isAlive(): boolean {
+    return this.currentHitPoints >= 0
+  }
 }
