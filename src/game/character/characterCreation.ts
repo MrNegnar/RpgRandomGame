@@ -3,6 +3,7 @@ import { Character } from './Character.js'
 import { CharacterClass } from '../CharacterClass.js'
 import { CharacterRace } from '../CharacterRace.js'
 import { Dice } from 'rpg-fight-encounter'
+import { Race } from './Race.js'
 
 /**
  * Creates a new character by prompting the user for various attributes.
@@ -17,7 +18,7 @@ export function createCharacter(): Character {
   const stats = setCharacterAttributes()
   const alignment = setCharacterAlignment()
   const gender = setCharacterGender()
-  const startHealth = setCharacterStartingMaxHealth()
+  const startHealth = setCharacterStartingMaxHealth(race, stats)
   return new Character(name, race, characterClass, stats, alignment, gender, startHealth)
 }
 
@@ -93,8 +94,19 @@ function setCharacterGender() {
   return chosenGender
 }
 
-function setCharacterStartingMaxHealth(): number {
+/**
+ * Calculates the starting maximum health for a base value of 5, choosen race and rolled constitution stats.
+ *
+ * @param race - The chosen character race.
+ * @param stats - The rolled character stats array.
+ * @returns The calculated starting maximum health.
+ */
+function setCharacterStartingMaxHealth(race: CharacterRace, stats: number[]): number {
   let Dice = new Dice();
-  const startHealth = Dice.rollDice(1, 10); // Example: Roll 1d10 for starting health
+  const baseValue = 5
+  const healthFromDice = Dice.rollDice(2, 4);
+  const healthFromRace = race[2]
+  const healthFromConstitution = stats[2]; // Assuming Constitution is the third attribute in the stats array
+  const startHealth = baseValue + healthFromDice + healthFromRace + healthFromConstitution
   return startHealth
 }
