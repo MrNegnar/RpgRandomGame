@@ -2,6 +2,9 @@
 
 import readlineSync from 'readline-sync'
 import { Character } from './game/character/Character.js'
+import { createCharacter } from './game/character/characterCreation.js'
+import { Player } from './game/character/Player.js'
+import { Enemy } from './game/character/Enemy.js'
 
 /**
  * Extracts the name argument from the command line.
@@ -33,7 +36,6 @@ function chooseDemoFighter(){
       break
     case "3":
       return;
-      break
     default:
       console.log("Invalid choice. Please try again.")
       break
@@ -57,7 +59,7 @@ function createDemoCharacter(choiceOfCharacter: string): void {
 
 function getStartMenuChoice(): string {
     console.log("Hello gamer!")
-    console.log("Prepare for an epic adventure!")
+    console.log("Prepare for a tournament fight!")
     console.log("What do you want to do?")
     console.log("1. Start character creation")
     console.log("2. Load demo character")
@@ -67,10 +69,11 @@ function getStartMenuChoice(): string {
 
     switch (startMenuChoice) {
       case "1":
-        console.log("Starting character creation...")
+        const playerArray = createCharacter()
+        const player1 = new Player(playerArray)
         break
       case "2":
-        
+        chooseDemoFighter()
         break
       case "3":
         console.log("Exiting game...")

@@ -19,7 +19,7 @@ export function createCharacter(): Character {
   const alignment = setCharacterAlignment()
   const gender = setCharacterGender()
   const startHealth = setCharacterStartingMaxHealth(race, stats)
-  return new Character(name, race, characterClass, stats, alignment, gender, startHealth)
+  return (name, race, characterClass, stats, alignment, gender, startHealth)
 }
 
 /**
