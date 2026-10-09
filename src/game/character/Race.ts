@@ -1,5 +1,5 @@
 export enum Race {
-  HUMAN(0, 0, 0, 1, 0, 1),
+  HUMAN = "Human"(0, 0, 0, 1, 0, 1),
   ELF(0, 2, 0, 0, 0, 0),
   DWARF(1, 0, 1, 0, 0, 0),
   GNOME(0, 0, 2, 0, 0, 0),

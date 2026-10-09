@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
-import { Character } from './Character'
+import { Character } from './game/character/Character.js'
 
 /**
  * Extracts the name argument from the command line.
@@ -40,7 +40,7 @@ function chooseDemoFighter(){
   }
 }
 
-function createDemoCharacter(choiceOfCharacter): void {
+function createDemoCharacter(choiceOfCharacter: string): void {
   switch (choiceOfCharacter) {
     case "Fighter" :
       let character = new Character("Human", "Fighter",/*Magic number hp*/ 100,/*Magic number speed*/ 2, /*Magic number armor*/ */ 2, /*set good stats for fighter */ 16, 14, 16, 8, 6, 5, "Neutral Good", "Male")
