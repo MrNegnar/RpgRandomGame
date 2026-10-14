@@ -1,0 +1,135 @@
+﻿@startuml
+skinparam classAttributeIconSize 0
+
+abstract Character {
+  - race: Race
+  - class: CharacterClass
+  - name: string
+  - health: number
+  - maxHealth: number
+  - currentHitPoints: number
+  - speed: number
+  - armor: number
+  - strength: number
+  - dexterity: number
+  - constitution: number
+  - intelligence: number
+  - wisdom: number
+  - charisma: number
+  - alignment: Alignment
+  - gender: Gender
+  - items: { name: string, description: string }[]
+  - equipment: Equipment
+  - equipItem(item: Equipment): void
+  - unequipItem(item: Equipment): void
+  - changeAlignment(alignment: Alignment)
+  - isAlive(): boolean
+  + toString(): string
+}
+
+class Player extends Character {
+}
+
+class Enemy extends Character {
+}
+
+class Game {
+  - players: any
+  - enemies: any[]
+}
+
+class CharacterCreation <<module>> {
+  + createCharacter(): Character
+  - setCharacterName(): string
+  - setCharacterRace(): Race
+  - setCharacterClass(): CharacterClass
+  - setCharacterAttributes(): { strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, charisma: number }
+  - setCharacterAlignment(): Alignment
+  - setCharacterGender()
+  - setCharacterStartingMaxHealth(race: Race, stats: { constitution: number }): number
+}
+
+object Races <<type>> {
+  HUMAN
+  ELF
+  DWARF
+  GNOME
+  ORC
+}
+
+object RaceObjects <<type.data>> {
+  StrenghtBonus
+  DexterityBonus
+  ConstitutionBonus
+  IntelligenceBonus
+  WisdomBonus
+  CharismaBonus
+}
+
+enum CharacterClass {
+  WARRIOR
+  MAGE
+  CLERIC
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Alignment {
+  LAWFUL_GOOD
+  NEUTRAL_GOOD
+  CHAOTIC_GOOD
+  LAWFUL_NEUTRAL
+  TRUE_NEUTRAL
+  CHAOTIC_NEUTRAL
+  LAWFUL_EVIL
+  NEUTRAL_EVIL
+  CHAOTIC_EVIL
+}
+
+object EnemyType <<type>> {
+  Goblin
+  Rat
+  Skeleton
+  Zombie
+  Orc
+  Troll
+  Dragon
+}
+
+object EnemyType.data <<type.data>> {
+  
+}
+
+
+'===============Enums=================
+
+Character --> "is a" Races
+Character --> "is a"CharacterClass
+Character --> "has a" Alignment
+Character --> "has a" Gender
+
+'===============types=================
+
+'===============relations=================
+
+Game --> "uses" CharacterCreation
+Game --> "1" Player: creates
+Game --> "..*" Enemy: creates
+Races --> "contains" RaceObjects
+
+'===============Interfaces=================
+
+
+'===============Notes=================
+
+note right of Character
+  Equipment, Class, items, playerinfo and CharacterInfo
+  are referenced in source but have no definitions in the files found.
+  CharacterClass and Race declarations also currently contain
+  TypeScript errors, so the diagram records their apparent intended shape.
+end note
+
+@enduml
