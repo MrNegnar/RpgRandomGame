@@ -19,7 +19,7 @@ export function createCharacter(): Character {
   const stats: {strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, charisma: number} = setCharacterAttributes()
   const alignment = setCharacterAlignment()
   const gender = setCharacterGender()
-  const startHealth = setCharacterStartingMaxHealth(race, stats.constitution)
+  const startHealth = setCharacterStartingMaxHealth(race, stats{constitution})
   return {name, race, characterClass, stats, alignment, gender, startHealth}
 }
 
@@ -74,7 +74,7 @@ function setCharacterAttributes(): {strength: number, dexterity: number, constit
   let Dice = new Dice();
   let statsDice;
   statsDice = Dice.rollDice(3, 6);
-  const characterStrenght = statsDice;
+  const characterStrength = statsDice;
   statsDice = Dice.rollDice(3, 6);
   const characterDexterity = statsDice;
   statsDice = Dice.rollDice(3, 6);
@@ -86,7 +86,7 @@ function setCharacterAttributes(): {strength: number, dexterity: number, constit
   statsDice = Dice.rollDice(3, 6);
   const characterCharisma = statsDice;
 
-  const stats = {strength: characterStrenght, dexterity: characterDexterity, constitution: characterConstitution, intelligence: characterIntelligence, wisdom: characterWisdom, charisma: characterCharisma}
+  const stats = {strength: characterStrength, dexterity: characterDexterity, constitution: characterConstitution, intelligence: characterIntelligence, wisdom: characterWisdom, charisma: characterCharisma}
 
   return stats
 }

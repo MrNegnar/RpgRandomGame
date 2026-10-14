@@ -1,15 +1,5 @@
-export enum CharacterClass {
-  WARRIOR(1, 0, 0),
-  MAGE(0, 1, 0),
-  CLERIC(0, 0, 1);
-
-  private final int strengthBonus;
-  private final int intelligenceBonus;
-  private final int wisdomBonus;
-
-  private CharacterClass(int strengthBonus, int intelligenceBonus, int wisdomBonus) {
-    this.strengthBonus = strengthBonus;
-    this.intelligenceBonus = intelligenceBonus;
-    this.wisdomBonus = wisdomBonus;
-  }
-}
+export const CharacterClass = {
+  WARRIOR: { strengthBonus: 1, intelligenceBonus: 0, wisdomBonus: 0 },
+  MAGE: { strengthBonus: 0, intelligenceBonus: 1, wisdomBonus: 0 },
+  CLERIC: { strengthBonus: 0, intelligenceBonus: 0, wisdomBonus: 1 },
+} as const;

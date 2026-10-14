@@ -1,4 +1,5 @@
 import { Races, type Race } from './Race.js';
+import { Gender } from './gender.js';
 import { CharacterClass } from './characterClass.js';
 import { Alignment } from './alignment.js';
 
@@ -21,6 +22,7 @@ export abstract class Character {
   private charisma: number;
   private alignment: Alignment;
   private gender: Gender;
+  private items: { name: string, description: string }[];
   private equipment: Equipment{head{}, body{}, legs{}, feet{}, hands{}, PrimaryWeapon{}, SecondaryWeapon{}};
 
   constructor(race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number,
@@ -109,6 +111,10 @@ export abstract class Character {
 
   public getEquipment(): Equipment{} {
     return this.equipment
+  }
+
+  public getItems(): items{} {
+    return this.items;
   }
 
   /**

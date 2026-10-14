@@ -1,6 +1,8 @@
 @startuml player usecases
 actor Player
 
+left to right direction
+
 rectangle "Before tournament" {
   usecase "Create Player" as UC1
   usecase "Create Enemy" as UC2

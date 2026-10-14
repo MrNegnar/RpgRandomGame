@@ -71,6 +71,7 @@ function getStartMenuChoice(): string {
       case "1":
         const playerArray = createCharacter()
         const player1 = new Player(playerArray)
+
         break
       case "2":
         chooseDemoFighter()

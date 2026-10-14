@@ -4,4 +4,4 @@ export const Races = {
   DWARF: { strengthBonus: 1, dexterityBonus: 0, constitutionBonus: 1, intelligenceBonus: 0, wisdomBonus: 0, charismaBonus: 0 },
   GNOME: { strengthBonus: 0, dexterityBonus: 0, constitutionBonus: 2, intelligenceBonus: 0, wisdomBonus: 0, charismaBonus: 0 },
   ORC: { strengthBonus: 2, dexterityBonus: 0, constitutionBonus: 0, intelligenceBonus: 0, wisdomBonus: 0, charismaBonus: 0 },
-} as const
+} as const;
