@@ -8,5 +8,4 @@ export class Player extends Character {
   constructor(PlayerArray: playerinfo[]) {
     super(...PlayerArray)
   }
-
 }

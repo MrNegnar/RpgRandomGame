@@ -14,7 +14,7 @@ interface GameInterface {
 
 '===============Objects=================
 
-object EnemyType <<object>> {
+object EnemyObject <<object>> {
   Goblin
   Rat
   Skeleton
@@ -40,7 +40,7 @@ object CharacterClass <<object>> {
 
 '===============Object data=================
 
-object EnemyTypeData <<object.data>> {
+object EnemyObjectData <<object.data>> {
   Health
   Attack
   Defense
@@ -102,5 +102,27 @@ class Player extends Character {
 class Enemy extends Character {
 }
 
+'================Objects=================
+
+Character --> "is a" Races
+Character --> "is a"CharacterClass
+
+Enemy --> "is a" EnemyObject
+
+'===============relations=================
+
+Game --> "uses" CharacterCreation
+Game --> "1" Player: creates
+Game --> "..*" Enemy: creates
+
+'==========Object data relations===========
+
+Race --> "contains" RaceData
+
+EnemyObject --> "contains" EnemyObjectData
+
+CharacterClass --> "contains" CharacterClassData
+
+'===============Notes=================
 
 @enduml

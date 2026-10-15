@@ -1,4 +1,4 @@
-export const EnemyType = {
+export const EnemyObject = {
   Goblin: {},
   Rat: {},
   Skeleton: {},

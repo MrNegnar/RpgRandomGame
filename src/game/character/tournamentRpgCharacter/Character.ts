@@ -1,7 +1,5 @@
 import { Race, type Race } from './Race.js';
-import { Gender } from './gender.js';
 import { CharacterClass, type CharacterClass } from './characterClass.js';
-import { Alignment } from './alignment.js';
 
 /**
  * An abstract class representing a character in the tournament RPG game.
@@ -48,6 +46,7 @@ export abstract class Character {
     this.race = Race[race]
     this.class = CharacterClass[characterClass]
     this.maxHealth = maxHealth
+    this.currentHitpoints = maxHealth;
     this.speed = 1;
     this.armor = 0;
     this.evasion = (dexterity-9)/2;
@@ -56,7 +55,6 @@ export abstract class Character {
     this.constitution = constitution
     this.intelligence = intelligence
     this.wisdom = wisdom
-    this.currentHitpoints = maxHealth;
   }
 
   /**
@@ -182,9 +180,10 @@ export abstract class Character {
    * @returns A string representation of the character's attributes and equipment.
    */
   public toString(): string {
-    return `Name: ${this.name}, Race: ${this.race}, Class: ${this.class},
-    Health: ${this.currentHitpoints}/${this.maxHealth}, Speed: ${this.speed}, Armor Class: ${this.armor},
-    Strength: ${this.strength}, Dexterity: ${this.dexterity}, Constitution: ${this.constitution}, Intelligence: ${this.intelligence}, Wisdom: ${this.wisdom}`
+    return `Name: ${this.name}\n\
+    Race: ${this.race}, Class: ${this.class},\n\
+    Health: ${this.currentHitpoints}/${this.maxHealth}, Speed: ${this.speed}, Armor: ${this.armor}, Evasion: ${this.evasion},\n\
+    Strength: ${this.strength}, Dexterity: ${this.dexterity}, Constitution: ${this.constitution}, Intelligence: ${this.intelligence}`
   }
 
   /**
