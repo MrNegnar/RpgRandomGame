@@ -50,11 +50,11 @@ export abstract class Character {
     this.speed = 1;
     this.armor = 0;
     this.evasion = (dexterity-9)/2;
-    this.strength = strength
-    this.dexterity = dexterity
-    this.constitution = constitution
-    this.intelligence = intelligence
-    this.wisdom = wisdom
+    this.strength = strength + this.race.strengthBonus + this.class.strengthBonus
+    this.dexterity = dexterity + this.race.dexterityBonus + this.class.dexterityBonus
+    this.constitution = constitution + this.race.constitutionBonus + this.class.constitutionBonus
+    this.intelligence = intelligence + this.race.intelligenceBonus + this.class.intelligenceBonus
+    this.wisdom = wisdom + this.race.wisdomBonus + this.class.wisdomBonus
   }
 
   /**
