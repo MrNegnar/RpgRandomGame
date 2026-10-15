@@ -1,13 +1,13 @@
-import { Race, type Race } from './Race.js';
-import { CharacterClass, type CharacterClass } from './characterClass.js';
+import { Races, type Race } from './Race.js';
+import { CharacterClasses, type CharacterClass } from './characterClass.js';
 
 /**
  * An abstract class representing a character in the tournament RPG game.
  */
 export abstract class Character {
   
-  private race: typeof Race[keyof typeof Race];
-  private class: typeof CharacterClass[keyof typeof CharacterClass];
+  private race: typeof Races[keyof typeof Races];
+  private class: typeof CharacterClasses[keyof typeof CharacterClasses];
   private name: string;
   private maxHealth: number;
   private currentHitpoints: number;
@@ -35,7 +35,7 @@ export abstract class Character {
    * @param intelligence The intelligence attribute of the character
    * @param wisdom The wisdom attribute of the character
    */
-  constructor(name: string, race: typeof Race, characterClass: typeof CharacterClass, maxHealth: number, speed: number, armor: number,
+  constructor(name: string, race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number,
     strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number){
 
     if (name == null || race == null || characterClass == null || maxHealth == null || isNaN(maxHealth) ||speed == null || armor == null ||
@@ -43,8 +43,8 @@ export abstract class Character {
       throw new Error("Invalid Character initialization, all parameters must be provided");
     }
     this.name = name
-    this.race = Race[race]
-    this.class = CharacterClass[characterClass]
+    this.race = Races[race]
+    this.class = CharacterClasses[characterClass]
     this.maxHealth = maxHealth
     this.currentHitpoints = maxHealth;
     this.speed = 1;
@@ -62,7 +62,7 @@ export abstract class Character {
    *
    * @returns Returns the race of the character
    */
-  public getRace(): typeof Race[keyof typeof Race] {
+  public getRace(): typeof Races[keyof typeof Races] {
     return this.race
   }
 
@@ -71,7 +71,7 @@ export abstract class Character {
    *
    * @returns Returns the class of the character
    */
-  public getClass(): typeof CharacterClass[keyof typeof CharacterClass] {
+  public getClass(): typeof CharacterClasses[keyof typeof CharacterClasses] {
     return this.class
   }
 
