@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
-import { Character } from './game/character/Character.js'
-import { createCharacter } from './game/character/characterCreation.js'
-import { Player } from './game/character/Player.js'
-import { Enemy } from './game/character/Enemy.js'
+import { Character } from './game/character/forFullRpg/Character.js'
+import { createCharacter } from './game/character/forFullRpg/characterCreation.js'
+import { Player } from './game/character/forFullRpg/Player.js'
+import { Enemy } from './game/character/forFullRpg/Enemy.js'
 
 /**
  * Extracts the name argument from the command line.

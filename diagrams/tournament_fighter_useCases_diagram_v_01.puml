@@ -11,9 +11,12 @@ rectangle "Before tournament" {
   usecase "Start Fight" as UC5
 }
 
-rectangle "During tournament" {
-  usecase "Equip Item" as UC6
-  usecase "Unequip Item" as UC7
+rectangle "During fight (from module)" {
+  usecase "attack" as UC6
+  usecase "cast spell: magic missile" as UC7
+  usecase "raise defence" as UC8
+  usecase "raise evasion" as UC9
+  usecase "heal" as UC10
 }
 
 Player --> UC1
@@ -23,5 +26,8 @@ Player --> UC4
 Player --> UC5
 Player --> UC6
 Player --> UC7
+Player --> UC8
+Player --> UC9
+Player --> UC10
 
 @enduml

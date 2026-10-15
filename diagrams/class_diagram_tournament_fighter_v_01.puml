@@ -1,0 +1,106 @@
+@startuml Class diagram of Tournament Fighter
+
+'===============Interfaces=================
+
+interface GameInterface {
+  +createPlayer(): Player
+  +createEnemy(): Enemy
+  +setupTournament(players: List<Player>, enemies: List<Enemy>): void
+  +startTournament(participants: List<Character>): void
+  +createFight(participants: List<Character>): void
+}
+
+
+
+'===============Objects=================
+
+object EnemyType <<object>> {
+  Goblin
+  Rat
+  Skeleton
+  Zombie
+  Orc
+  Troll
+  Dragon
+}
+
+object Race <<object>> {
+  HUMAN
+  ELF
+  DWARF
+  GNOME
+  ORC
+}
+
+object CharacterClass <<object>> {
+  WARRIOR
+  MAGE
+  CLERIC
+}
+
+'===============Object data=================
+
+object EnemyTypeData <<object.data>> {
+  Health
+  Attack
+  Defense
+  evasion
+  Speed
+}
+
+object RaceData <<object.data>> {
+  StrengthBonus
+  DexterityBonus
+  ConstitutionBonus
+  IntelligenceBonus
+  WisdomBonus
+  CharismaBonus
+}
+
+object CharacterClassData <<object.data>> {
+  StrengthBonus
+  IntelligenceBonus
+  WisdomBonus
+}
+
+
+
+'===============abstract classes=================
+
+abstract Character implements CharacterInterface {
+  - race: Race
+  - class: CharacterClass
+  - name: string
+  - health: number
+  - maxHealth: number
+  - currentHitpoints: number
+  - speed: number
+  - armor: number
+  - evasion: number
+  - strength: number
+  - dexterity: number
+  - constitution: number
+  - intelligence: number
+  - wisdom: number
+  - isAlive(): boolean
+  + toString(): string
+}
+
+'===============concrete classes=================
+
+class Game implements GameInterface {
+  -players: List<Player>
+  -enemies: List<Enemy>
+  +setupTournament(players: List<Player>, enemies: List<Enemy>): void
+  +startTournament(participants: List<Character>): void
+  +createFight(participants: List<Character>): void
+}
+
+class Player extends Character {
+}
+
+class Enemy extends Character {
+}
+
+
+@enduml

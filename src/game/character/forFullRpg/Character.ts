@@ -1,19 +1,20 @@
-import { Races, type Race } from './Race.js';
+import { Race, type Race } from './Race.js';
 import { Gender } from './gender.js';
-import { CharacterClass } from './characterClass.js';
+import { CharacterClass, type CharacterClass } from './characterClass.js';
 import { Alignment } from './alignment.js';
 
 
 export abstract class Character {
   
-  private race: Race;
+  private race: typeof Race[keyof typeof Race];
   private class: CharacterClass;
   private name: string;
   private health: number;
   private maxHealth: number;
-  private currentHitPoints: number;
+  private currentHitpoints: number;
   private speed: number;
   private armor: number;
+  private evasion: number;
   private strength: number;
   private dexterity: number;
   private constitution: number;
@@ -23,7 +24,7 @@ export abstract class Character {
   private alignment: Alignment;
   private gender: Gender;
   private items: { name: string, description: string }[];
-  private equipment: Equipment{head{}, body{}, legs{}, feet{}, hands{}, PrimaryWeapon{}, SecondaryWeapon{}};
+  private equipment: Equipment{head: {}, body: {}, legs: {}, feet: {}, hands: {}, PrimaryHand: {}, SecondaryHand: {}};
 
   constructor(race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number,
     strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, charisma: number,
@@ -33,11 +34,12 @@ export abstract class Character {
     alignment == null || gender == null) {
       throw new Error("Invalid Character initialization, all parameters must be provided");
     }
-    this.race = race
+    this.race = Race[race]
     this.class = characterClass
     this.maxHealth = maxHealth
-    this.speed = speed
-    this.armor = armor
+    this.speed = 1;
+    this.armor = 0;
+    this.evasion = 0;
     this.strength = strength
     this.dexterity = dexterity
     this.constitution = constitution
@@ -46,15 +48,16 @@ export abstract class Character {
     this.charisma = charisma
     this.alignment = alignment
     this.gender = gender
-    this.currentHitPoints = maxHealth
-    this.equipment = {head: null, body: null, legs: null, feet: null, hands: null, PrimaryWeapon: null, SecondaryWeapon: null};
+    this.currentHitpoints = maxHealth
+    this.items = [];
+    this.equipment = {head: {}, body: {}, legs: {}, feet: {}, hands: {}, PrimaryHand: {}, SecondaryHand: {}};
   }
 
   public getRace(): Race {
     return this.race
   }
 
-  public getClass(): Class {
+  public getClass(): CharacterClass {
     return this.class
   }
   public getName(): string {
@@ -65,8 +68,8 @@ export abstract class Character {
     return this.maxHealth
   }
 
-  public getCurrentHitPoints(): number {
-    return this.currentHitPoints
+  public getCurrentHitpoints(): number {
+    return this.currentHitpoints
   }
 
   public getSpeed(): number {
@@ -124,7 +127,7 @@ export abstract class Character {
    */
   public toString(): string {
     return `Name: ${this.name}, Race: ${this.race}, Class: ${this.class},
-    Health: ${this.currentHitPoints}/${this.maxHealth}, Speed: ${this.speed}, Armor Class: ${this.armor},
+    Health: ${this.currentHitpoints}/${this.maxHealth}, Speed: ${this.speed}, Armor Class: ${this.armor},
     Strength: ${this.strength}, Dexterity: ${this.dexterity}, Constitution: ${this.constitution}, Intelligence: ${this.intelligence}, Wisdom: ${this.wisdom}, Charisma: ${this.charisma},
     Alignment: ${this.alignment}, Gender: ${this.gender}, Equipment: ${this.equipment.map(e => e.toString()).join(', ')}`
   }
@@ -177,6 +180,6 @@ export abstract class Character {
    * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
    */
   private isAlive(): boolean {
-    return this.currentHitPoints > 0
+    return this.currentHitpoints > 0
   }
 }
