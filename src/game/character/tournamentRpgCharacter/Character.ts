@@ -28,6 +28,11 @@ export abstract class Character {
   private constitution: number;
   private intelligence: number;
   private wisdom: number;
+  private strengthModifier: number;
+  private dexterityModifier: number;
+  private constitutionModifier: number;
+  private intelligenceModifier: number;
+  private wisdomModifier: number;
 
   /**
    * Constructs a new Character instance with the specified attributes.
@@ -38,14 +43,15 @@ export abstract class Character {
    * @param maxHealth The maximum health of the character
    * @param speed The speed attribute of the character
    * @param armor The armor attribute of the character
+   * @param evasion The evasion attribute of the character
    * @param strength The strength attribute of the character
    * @param dexterity The dexterity attribute of the character
    * @param constitution The constitution attribute of the character
    * @param intelligence The intelligence attribute of the character
    * @param wisdom The wisdom attribute of the character
    */
-  constructor(name: string, race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number,
-    strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, raceBonus?: StatBonuses, characterClassBonus?: StatBonuses){
+  constructor(name: string, race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number, evasion: number,
+    strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number){
 
     if (name == null || race == null || characterClass == null || maxHealth == null || isNaN(maxHealth) ||speed == null || armor == null ||
     strength == null || dexterity == null || constitution == null || intelligence == null || wisdom == null) {
@@ -58,12 +64,17 @@ export abstract class Character {
     this.currentHitpoints = maxHealth;
     this.speed = speed
     this.armor = armor
-    this.evasion = (dexterity + (race?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0) - 9)/2;
+    this.evasion = evasion
     this.strength = strength + (race?.strengthBonus + characterClassBonus?.strengthBonus ?? 0)
     this.dexterity = dexterity + (race?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0)
     this.constitution = constitution + (race?.constitutionBonus + characterClassBonus?.constitutionBonus ?? 0)
     this.intelligence = intelligence + (race?.intelligenceBonus + characterClassBonus?.intelligenceBonus ?? 0)
     this.wisdom = wisdom + (race?.wisdomBonus + characterClassBonus?.wisdomBonus ?? 0)
+    this.strengthModifier = Math.floor((this.strength - 10) / 2)
+    this.dexterityModifier = Math.floor((this.dexterity - 10) / 2)
+    this.constitutionModifier = Math.floor((this.constitution - 10) / 2)
+    this.intelligenceModifier = Math.floor((this.intelligence - 10) / 2)
+    this.wisdomModifier = Math.floor((this.wisdom - 10) / 2)
   }
 
   /**
