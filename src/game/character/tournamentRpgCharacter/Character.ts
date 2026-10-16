@@ -49,7 +49,7 @@ export abstract class Character {
     this.currentHitpoints = maxHealth;
     this.speed = 1;
     this.armor = 0;
-    this.evasion = (dexterity-9)/2;
+    this.evasion = (dexterity + this.race.dexterityBonus + this.class.dexterityBonus - 9)/2;
     this.strength = strength + this.race.strengthBonus + this.class.strengthBonus
     this.dexterity = dexterity + this.race.dexterityBonus + this.class.dexterityBonus
     this.constitution = constitution + this.race.constitutionBonus + this.class.constitutionBonus
@@ -175,6 +175,15 @@ export abstract class Character {
   }
 
   /**
+   * Validates whether the character is still alive based on current hit points.
+   * 
+   * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
+   */
+  private isAlive(): boolean {
+    return this.currentHitpoints > 0
+  }
+
+  /**
    * composes a string representation of the character's attributes and equipment.
    * 
    * @returns A string representation of the character's attributes and equipment.
@@ -184,14 +193,5 @@ export abstract class Character {
     Race: ${this.race}, Class: ${this.class},\n\
     Health: ${this.currentHitpoints}/${this.maxHealth}, Speed: ${this.speed}, Armor: ${this.armor}, Evasion: ${this.evasion},\n\
     Strength: ${this.strength}, Dexterity: ${this.dexterity}, Constitution: ${this.constitution}, Intelligence: ${this.intelligence}`
-  }
-
-  /**
-   * Validates whether the character is still alive based on current hit points.
-   * 
-   * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
-   */
-  private isAlive(): boolean {
-    return this.currentHitpoints > 0
   }
 }
