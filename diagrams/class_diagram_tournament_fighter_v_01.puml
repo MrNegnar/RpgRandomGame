@@ -95,6 +95,8 @@ abstract Character implements CharacterInterface {
 class Game implements GameInterface {
   -players: List<Player>
   -enemies: List<Enemy>
+  +addPlayer(player: Player): void
+  +addEnemy(enemy: Enemy): void
   +setupTournament(players: List<Player>, enemies: List<Enemy>): void
   +startTournament(participants: List<Character>): void
   +createFight(participants: List<Character>): void
