@@ -1,11 +1,20 @@
 import { Races, type Race } from './Race.js';
 import { CharacterClasses, type CharacterClass } from './characterClass.js';
 
+
+type StatBonuses = {
+  strengthBonus?: number
+  dexterityBonus?: number
+  constitutionBonus?: number
+  intelligenceBonus?: number
+  wisdomBonus?: number
+}
+
 /**
  * An abstract class representing a character in the tournament RPG game.
  */
 export abstract class Character {
-  
+
   private race: typeof Races[keyof typeof Races];
   private class: typeof CharacterClasses[keyof typeof CharacterClasses];
   private name: string;
@@ -36,7 +45,7 @@ export abstract class Character {
    * @param wisdom The wisdom attribute of the character
    */
   constructor(name: string, race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number,
-    strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number){
+    strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number, raceBonus?: StatBonuses, characterClassBonus?: StatBonuses){
 
     if (name == null || race == null || characterClass == null || maxHealth == null || isNaN(maxHealth) ||speed == null || armor == null ||
     strength == null || dexterity == null || constitution == null || intelligence == null || wisdom == null) {
@@ -47,14 +56,14 @@ export abstract class Character {
     this.class = CharacterClasses[characterClass]
     this.maxHealth = maxHealth
     this.currentHitpoints = maxHealth;
-    this.speed = 1;
-    this.armor = 0;
-    this.evasion = (dexterity + this.race.dexterityBonus + this.class.dexterityBonus - 9)/2;
-    this.strength = strength + this.race.strengthBonus + this.class.strengthBonus
-    this.dexterity = dexterity + this.race.dexterityBonus + this.class.dexterityBonus
-    this.constitution = constitution + this.race.constitutionBonus + this.class.constitutionBonus
-    this.intelligence = intelligence + this.race.intelligenceBonus + this.class.intelligenceBonus
-    this.wisdom = wisdom + this.race.wisdomBonus + this.class.wisdomBonus
+    this.speed = speed
+    this.armor = armor
+    this.evasion = (dexterity + (race?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0) - 9)/2;
+    this.strength = strength + (race?.strengthBonus + characterClassBonus?.strengthBonus ?? 0)
+    this.dexterity = dexterity + (race?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0)
+    this.constitution = constitution + (race?.constitutionBonus + characterClassBonus?.constitutionBonus ?? 0)
+    this.intelligence = intelligence + (race?.intelligenceBonus + characterClassBonus?.intelligenceBonus ?? 0)
+    this.wisdom = wisdom + (race?.wisdomBonus + characterClassBonus?.wisdomBonus ?? 0)
   }
 
   /**
