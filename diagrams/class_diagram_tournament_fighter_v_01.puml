@@ -34,6 +34,7 @@ object Race <<object>> {
 
 object CharacterClass <<object>> {
   WARRIOR
+  ROGUE
   MAGE
   CLERIC
 }
@@ -59,8 +60,11 @@ object RaceData <<object.data>> {
 
 object CharacterClassData <<object.data>> {
   StrengthBonus
+  DexterityBonus
+  ConstitutionBonus
   IntelligenceBonus
   WisdomBonus
+  CharismaBonus
 }
 
 
@@ -104,16 +108,14 @@ class Enemy extends Character {
 
 '================Objects=================
 
-Character --> "is a" Races
-Character --> "is a"CharacterClass
+Character --> "is a" Race
+Character --> "is a" CharacterClass
 
 Enemy --> "is a" EnemyObject
 
 '===============relations=================
 
-Game --> "uses" CharacterCreation
-Game --> "1" Player: creates
-Game --> "..*" Enemy: creates
+Game --> "..*" Character: creates
 
 '==========Object data relations===========
 
