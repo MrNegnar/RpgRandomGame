@@ -1,4 +1,5 @@
 import { Character } from './Character.js'
+import type { StatBonuses } from './statBonuses.js'
 
 /**
  * Represents a player character in the game, extending the base Character class.

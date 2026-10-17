@@ -1,15 +1,6 @@
 import { Races, type Race } from './Race.js';
 import { CharacterClasses, type CharacterClass } from './characterClass.js';
 
-
-type StatBonuses = {
-  strengthBonus?: number
-  dexterityBonus?: number
-  constitutionBonus?: number
-  intelligenceBonus?: number
-  wisdomBonus?: number
-}
-
 /**
  * An abstract class representing a character in the tournament RPG game.
  */
@@ -65,11 +56,11 @@ export abstract class Character {
     this.speed = speed
     this.armor = armor
     this.evasion = evasion
-    this.strength = strength + (race?.strengthBonus + characterClassBonus?.strengthBonus ?? 0)
-    this.dexterity = dexterity + (race?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0)
-    this.constitution = constitution + (race?.constitutionBonus + characterClassBonus?.constitutionBonus ?? 0)
-    this.intelligence = intelligence + (race?.intelligenceBonus + characterClassBonus?.intelligenceBonus ?? 0)
-    this.wisdom = wisdom + (race?.wisdomBonus + characterClassBonus?.wisdomBonus ?? 0)
+    this.strength = strength + (raceBonus?.strengthBonus + characterClassBonus?.strengthBonus ?? 0)
+    this.dexterity = dexterity + (raceBonus?.dexterityBonus + characterClassBonus?.dexterityBonus ?? 0)
+    this.constitution = constitution + (raceBonus?.constitutionBonus + characterClassBonus?.constitutionBonus ?? 0)
+    this.intelligence = intelligence + (raceBonus?.intelligenceBonus + characterClassBonus?.intelligenceBonus ?? 0)
+    this.wisdom = wisdom + (raceBonus?.wisdomBonus + characterClassBonus?.wisdomBonus ?? 0)
     this.strengthModifier = Math.floor((this.strength - 10) / 2)
     this.dexterityModifier = Math.floor((this.dexterity - 10) / 2)
     this.constitutionModifier = Math.floor((this.constitution - 10) / 2)
