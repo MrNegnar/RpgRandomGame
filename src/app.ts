@@ -1,93 +1,19 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
-import { Character } from './game/character/forFullRpg/Character.js'
-import { createCharacter } from './game/character/forFullRpg/characterCreation.js'
-import { Player } from './game/character/forFullRpg/Player.js'
-import { Enemy } from './game/character/forFullRpg/Enemy.js'
+import { Character } from './game/character/tournamentRpgCharacter/Character.js'
+import { Player } from './game/character/tournamentRpgCharacter/Player.js'
+import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
+import { characterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
+import { races } from './game/character/tournamentRpgCharacter/races.js'
+import { Game } from './game/Game.js'
 
 /**
- * Extracts the name argument from the command line.
+ * The main function serves as the entry point for the application.
+ * It attempts to display the start menu and handle user input.
+ * If an unexpected error occurs, it logs the error and sets the process exit code to 1.
  *
- * @example
- * parseArgs(['Ada Lovelace']) // Returns 'Ada Lovelace'
- * parseArgs([]) // Returns undefined
- * @param argv - Command-line arguments, excluding the node executable and
- *   script path (i.e. `process.argv.slice(2)`).
- * @returns The first positional argument, if any.
- */
-export function parseArgs(argv: string[]): string | undefined {
-  return argv[0]
-}
-
-function chooseDemoFighter(){
-  console.log("Here are the demo character that can be coosen from")
-  console.log("1. Fighter")
-  console.log("2. Mage")
-  console.log("3. Exit to main menu")
-
-  const demoCharacterChoice = readlineSync.question("Enter your choice: ")
-  switch (demoCharacterChoice) {
-    case "1":
-      createDemoCharacter("Fighter")
-      break
-    case "2":
-      createDemoCharacter("Mage")
-      break
-    case "3":
-      return;
-    default:
-      console.log("Invalid choice. Please try again.")
-      break
-  }
-}
-
-function createDemoCharacter(choiceOfCharacter: string): void {
-  switch (choiceOfCharacter) {
-    case "Fighter" :
-      let character = new Character("Human", "Fighter",/*Magic number hp*/ 100,/*Magic number speed*/ 2, /*Magic number armor*/ */ 2, /*set good stats for fighter */ 16, 14, 16, 8, 6, 5, "Neutral Good", "Male")
-      break
-    case "Mage" :
-      let character = new Character("Human", "Mage",/*Magic number hp*/ 80,/*Magic number speed*/ 2, /*Magic number armor*/ */ 1, /*set good stats for mage */ 8, 14, 10, 16, 12, 10, "Neutral Good", "Male")
-      break
-    default:
-      console.log("Invalid character choice.")
-      break
-  }
-}
-
-
-function getStartMenuChoice(): string {
-    console.log("Hello gamer!")
-    console.log("Prepare for a tournament fight!")
-    console.log("What do you want to do?")
-    console.log("1. Start character creation")
-    console.log("2. Load demo character")
-    console.log("3. Exit")
-
-    const startMenuChoice = readlineSync.question("Enter your choice: ")
-
-    switch (startMenuChoice) {
-      case "1":
-        const playerArray = createCharacter()
-        const player1 = new Player(playerArray)
-
-        break
-      case "2":
-        chooseDemoFighter()
-        break
-      case "3":
-        console.log("Exiting game...")
-        process.exit(0)
-      default:
-        console.log("Invalid choice. Please try again.")
-        throw new Error("Invalid choice")
-    }
-    return startMenuChoice
-}
-
-/**
- * Execution entry point.
+ * @returns {void} This function does not return a value.
  */
 function main(): void {
 
@@ -96,6 +22,105 @@ function main(): void {
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
     process.exitCode = 1
+  }
+}
+
+/**
+ * Displays the start menu and handles the user's choice.
+ *
+ * @throws {Error} If the user enters an invalid choice.
+ * @returns {void} This function does not return a value.
+ */
+function getStartMenuChoice() {
+    console.log("Hello gamer!")
+    console.log("Prepare for a tournament fight!")
+    console.log("What do you want to do?")
+    console.log("1. Start character creation")
+    console.log("2. Exit")
+
+    const startMenuChoice = parseInt(readlineSync.keyIn(readlineSync.question("Enter your choice: ")))
+
+    switch (startMenuChoice) {
+      case 1:
+        chooseCharacterClass()
+        break
+      case 2:
+        console.log("Exiting game...")
+        process.exit(0)
+        break
+      default:
+        console.log("Invalid choice. Please try again.")
+        throw new Error("Invalid choice")
+    }
+    return startMenuChoice
+}
+
+
+/**
+ * Displays the character class selection menu and handles the user's choice.
+ *
+ * @throws {Error} If the user enters an invalid choice.
+ * @returns {void} This function does not return a value.
+ */
+  function chooseCharacterClass() {
+    for (let i = 0; i < characterClasses.length; i++) {
+      console.log(`${i + 1}. ${characterClasses[i]}`)
+    }
+    const characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
+
+  switch (characterClassChoice) {
+    case 1:
+      chooseCharacterRace("Fighter")
+      break
+    case 2:
+      chooseCharacterRace("Mage")
+      break
+    case 3:
+      chooseCharacterRace("Cleric")
+      break
+    case 4:
+      chooseCharacterRace("Rogue")
+      break
+    case 5:
+      return;
+    default:
+      console.log("Invalid choice. Please try again.")
+      break
+  }
+}
+
+/**
+ * Displays the character race selection menu and handles the user's choice.
+ *
+ * @param choosenClass the class chosen by the user.
+ * @returns {void} This function does not return a value.
+ */
+function chooseCharacterRace(choosenClass: string) {
+  for (let i = 0; i < races.length; i++) {
+    console.log(`${i + 1}. ${races[i]}`)
+  }
+
+  const raceChoice = parseInt(readlineSync.question("Enter your choice: ")) 
+
+  const game = new Game()
+  switch (raceChoice) {
+    case 1:
+      game.addPlayer({ class: choosenClass, race: "Human" })
+      break
+    case 2:
+      game.addPlayer({ class: choosenClass, race: "Elf" })
+      break
+    case 3:
+      game.addPlayer({ class: choosenClass, race: "Dwarf" })
+      break
+    case 4:
+      game.addPlayer({ class: choosenClass, race: "Orc" })
+      break
+    case 5:
+      return;
+    default:
+      console.log("Invalid choice. Please try again.")
+      break
   }
 }
 

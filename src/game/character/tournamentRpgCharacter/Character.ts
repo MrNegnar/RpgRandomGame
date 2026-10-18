@@ -1,5 +1,5 @@
 import { Races, type Race } from './Race.js';
-import { CharacterClasses, type CharacterClass } from './characterClass.js';
+import { CharacterClasses, type CharacterClass } from './characterClasses.js';
 
 /**
  * An abstract class representing a character in the tournament RPG game.
