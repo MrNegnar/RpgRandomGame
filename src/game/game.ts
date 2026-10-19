@@ -29,7 +29,7 @@ export class Game {
    *
    * @param player The player to be added to the game.
    */
-  public addPlayer(player: any): void {
+  public addPlayer(player: {}): void {
     this.players.push(player);
   }
 

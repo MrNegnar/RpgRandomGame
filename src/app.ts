@@ -5,8 +5,18 @@ import { Character } from './game/character/tournamentRpgCharacter/Character.js'
 import { Player } from './game/character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
 import { characterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
-import { races } from './game/character/tournamentRpgCharacter/races.js'
+import { Races } from './game/character/tournamentRpgCharacter/race.js'
 import { Game } from './game/Game.js'
+import { Dice } from 'rpg-fight-encounter'
+
+export const characterSettings = {
+  name: "",
+  characterClasses,
+  Races,
+  stats: {}
+}
+
+const game = new Game()
 
 /**
  * The main function serves as the entry point for the application.
@@ -18,6 +28,9 @@ import { Game } from './game/Game.js'
 function main(): void {
 
   try {
+    console.log("Hello user, what is your name?")
+    const userName = readlineSync.question("Enter your name: ")
+    console.log(`Welcome, ${userName}!`)
     getStartMenuChoice()
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
@@ -32,7 +45,6 @@ function main(): void {
  * @returns {void} This function does not return a value.
  */
 function getStartMenuChoice() {
-    console.log("Hello gamer!")
     console.log("Prepare for a tournament fight!")
     console.log("What do you want to do?")
     console.log("1. Start character creation")
@@ -42,7 +54,7 @@ function getStartMenuChoice() {
 
     switch (startMenuChoice) {
       case 1:
-        chooseCharacterClass()
+        charactercreation()
         break
       case 2:
         console.log("Exiting game...")
@@ -55,6 +67,16 @@ function getStartMenuChoice() {
     return startMenuChoice
 }
 
+/**
+ * Handles the overall character creation process, including class, stats, and race selection, and adds the player to the game.
+ */
+function charactercreation() {
+  chooseCharacterClass()
+  createCharacterStats()
+  chooseCharacterRace()
+  const player = new Player({ characterSettings })
+  game.addPlayer(player)
+}
 
 /**
  * Displays the character class selection menu and handles the user's choice.
@@ -64,25 +86,32 @@ function getStartMenuChoice() {
  */
   function chooseCharacterClass() {
     for (let i = 0; i < characterClasses.length; i++) {
-      console.log(`${i + 1}. ${characterClasses[i]}`)
+      console.log(`${i + 1}. ${characterClasses[i]} has the statbonuses applied`)
+      console.log(`strength: ${characterClasses[i].stats.strength}`)
+      console.log(`dexterity: ${characterClasses[i].stats.dexterity}`)
+      console.log(`constitution: ${characterClasses[i].stats.constitution}`)
+      console.log(`intelligence: ${characterClasses[i].stats.intelligence}`)
+      console.log(`wisdom: ${characterClasses[i].stats.wisdom}`)
     }
     const characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
 
   switch (characterClassChoice) {
     case 1:
-      chooseCharacterRace("Fighter")
+      characterSettings.characterClasses = "Fighter";
+      createCharacterStats()
       break
     case 2:
-      chooseCharacterRace("Mage")
+      characterSettings.characterClasses = "Mage";
+      createCharacterStats()
       break
     case 3:
-      chooseCharacterRace("Cleric")
+      characterSettings.characterClasses = "Cleric";
+      createCharacterStats()
       break
     case 4:
-      chooseCharacterRace("Rogue")
+      characterSettings.characterClasses = "Rogue";
+      createCharacterStats()
       break
-    case 5:
-      return;
     default:
       console.log("Invalid choice. Please try again.")
       break
@@ -90,38 +119,72 @@ function getStartMenuChoice() {
 }
 
 /**
- * Displays the character race selection menu and handles the user's choice.
- *
- * @param choosenClass the class chosen by the user.
- * @returns {void} This function does not return a value.
+ * Generates and assigns character stats using dice rolls.
  */
-function chooseCharacterRace(choosenClass: string) {
-  for (let i = 0; i < races.length; i++) {
-    console.log(`${i + 1}. ${races[i]}`)
+function createCharacterStats() {
+  const dice = new Dice()
+  characterSettings.stats = {
+    strength: dice.rollDice(3, 6),
+    dexterity: dice.rollDice(3, 6),
+    constitution: dice.rollDice(3, 6),
+    intelligence: dice.rollDice(3, 6),
+    wisdom: dice.rollDice(3, 6)
+  }
+  console.log("Character stats have been generated:", characterSettings.stats)
+  chooseCharacterRace()
+}
+
+/**
+ * Displays the character race selection menu and handles the user's choice.
+ */
+function chooseCharacterRace() {
+  for (let i = 0; i < Races.length; i++) {
+    console.log(`${i + 1}. ${Races[i]} has the statbonuses applied: `)
+    console.log(`strength: ${Races[i].stats.strength}`)
+    console.log(`dexterity: ${Races[i].stats.dexterity}`)
+    console.log(`constitution: ${Races[i].stats.constitution}`)
+    console.log(`intelligence: ${Races[i].stats.intelligence}`)
+    console.log(`wisdom: ${Races[i].stats.wisdom}`)
   }
 
   const raceChoice = parseInt(readlineSync.question("Enter your choice: ")) 
 
-  const game = new Game()
   switch (raceChoice) {
     case 1:
-      game.addPlayer({ class: choosenClass, race: "Human" })
+      characterSettings.Races = Races.HUMAN;
       break
     case 2:
-      game.addPlayer({ class: choosenClass, race: "Elf" })
+      characterSettings.Races = Races.ELF;
       break
     case 3:
-      game.addPlayer({ class: choosenClass, race: "Dwarf" })
+      characterSettings.Races = Races.DWARF;
       break
     case 4:
-      game.addPlayer({ class: choosenClass, race: "Orc" })
+      characterSettings.Races = Races.ORC;
       break
-    case 5:
-      return;
     default:
       console.log("Invalid choice. Please try again.")
       break
   }
+}
+
+/**
+ * Prompts the user to decide the number of enemies for the game and updates the enemy settings accordingly.
+ */
+function decideEnemyNumber() {
+  console.log("This is a tournament fighter, so it need to be balanced.")
+  const numberOfEnemies = parseInt(readlineSync.question("Enter the number of enemies: "))
+  console.log(`Number of enemies set to: ${numberOfEnemies}`)
+  createEnemys(numberOfEnemies)
+}
+
+/**
+ * Creates enemy characters for the game based on the enemy settings.
+ *
+ * @param numberOfEnemies The number of enemy characters to create.
+ */
+function createEnemys(numberOfEnemies: number) {
+
 }
 
 main()

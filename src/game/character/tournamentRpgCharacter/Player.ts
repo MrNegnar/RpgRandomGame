@@ -11,7 +11,7 @@ export class Player extends Character {
    *
    * @param PlayerArray An array containing the player's information, which will be passed to the Character constructor.
    */
-  constructor(PlayerArray: playerinfo[]) {
-    super(...PlayerArray)
+  constructor({ characterSettings }: { characterSettings: any }) {
+    super(characterSettings)
     }
 }
