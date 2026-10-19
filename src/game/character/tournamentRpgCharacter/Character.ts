@@ -6,8 +6,7 @@ import { CharacterClasses, type CharacterClass } from './characterClasses.js';
  */
 export abstract class Character {
 
-  private race: typeof Races[keyof typeof Races];
-  private class: typeof CharacterClasses[keyof typeof CharacterClasses];
+
   private name: string;
   private maxHealth: number;
   private currentHitpoints: number;
@@ -32,13 +31,11 @@ export abstract class Character {
    */
   constructor({ characterSettings }: { characterSettings: any }){
 
-    if (name == null || race == null || characterClass == null || maxHealth == null || isNaN(maxHealth) ||speed == null || armor == null ||
-    strength == null || dexterity == null || constitution == null || intelligence == null || wisdom == null) {
+    if (!characterSettings.name || !characterSettings.race || !characterSettings.characterClass || !characterSettings.maxHealth || isNaN(characterSettings.maxHealth) || !characterSettings.speed || !characterSettings.armor ||
+        !characterSettings.evasion || !characterSettings.strength || !characterSettings.dexterity || !characterSettings.constitution || !characterSettings.intelligence || !characterSettings.wisdom) {
       throw new Error("Invalid Character initialization, all parameters must be provided");
     }
     this.name = name
-    this.race = Races[race]
-    this.class = CharacterClasses[characterClass]
     this.speed = speed
     this.armor = armor
     this.evasion = evasion

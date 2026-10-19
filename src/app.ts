@@ -11,9 +11,10 @@ import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 
 export const characterSettings = {
   name: "",
-  CharacterClass: undefined as
+  characterClass: undefined as
     (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined,
-  Race,
+  race: undefined as
+    (typeof Races)[keyof typeof Races] | undefined,
   stats: {}
 }
 
@@ -100,16 +101,16 @@ function charactercreation() {
 
   switch (characterClassChoice) {
     case 1:
-      characterSettings.CharacterClass = CharacterClasses.FIGHTER;
+      characterSettings.characterClass = CharacterClasses.FIGHTER;
       break
     case 2:
-      characterSettings.CharacterClass = CharacterClasses.ROGUE;
+      characterSettings.characterClass = CharacterClasses.ROGUE;
       break
     case 3:
-      characterSettings.CharacterClass = CharacterClasses.MAGE;
+      characterSettings.characterClass = CharacterClasses.MAGE;
       break
     case 4:
-      characterSettings.CharacterClass = CharacterClasses.CLERIC;
+      characterSettings.characterClass = CharacterClasses.CLERIC;
       break
     default:
       console.log("Invalid choice. Please try again.")
@@ -154,16 +155,16 @@ function chooseCharacterRace() {
 
   switch (raceChoice) {
     case 1:
-      characterSettings.Race = Races.HUMAN;
+      characterSettings.race = Races.HUMAN;
       break
     case 2:
-      characterSettings.Race = Races.ELF;
+      characterSettings.race = Races.ELF;
       break
     case 3:
-      characterSettings.Race = Races.DWARF;
+      characterSettings.race = Races.DWARF;
       break
     case 4:
-      characterSettings.Race = Races.ORC;
+      characterSettings.race = Races.ORC;
       break
     default:
       console.log("Invalid choice. Please try again.")
@@ -188,8 +189,10 @@ function decideEnemyNumber() {
  */
 function createEnemys(numberOfEnemies: number) {
   for (let i = 0; i < numberOfEnemies; i++) {
-    const enemyIndex = Math.floor(Math.random() * Object.keys(EnemyObject).length)
-    const enemy = new Enemy({ characterSettings: EnemyObject[Object.keys(EnemyObject)[enemyIndex]] })
+    const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
+    const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
+    const enemy = new Enemy(EnemyObject[name])
+    game.addEnemy(enemy)
   }
 }
 
