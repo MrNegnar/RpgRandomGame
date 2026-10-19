@@ -100,7 +100,13 @@ function charactercreation() {
         console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
         console.log(`wisdombonus: ${classData.wisdomBonus}`)
     }
-    const characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
+   let characterClassChoice;
+    do {
+      characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
+      if (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4) {
+        console.log("Invalid choice. Please try again.")
+      }
+    } while (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4)
 
   switch (characterClassChoice) {
     case 1:
@@ -153,8 +159,14 @@ function chooseCharacterRace() {
         console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
         console.log(`wisdombonus: ${raceData.wisdomBonus}`)
     }
+    let raceChoice;
+    do {
+      raceChoice = parseInt(readlineSync.question("Enter your choice: "))
+      if (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5) {
+        console.log("Invalid choice. Please try again.")
+      }
+    } while (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5)
 
-  const raceChoice = parseInt(readlineSync.question("Enter your choice: ")) 
 
   switch (raceChoice) {
     case 1:
@@ -191,14 +203,11 @@ function decideEnemyNumber(): number {
     readlineSync.question('Enter a positive, uneven number of enemies: '),
   )
 
-  if (
-    !Number.isInteger(numberOfEnemies) ||
-    numberOfEnemies <= 0 ||
-    numberOfEnemies % 2 !== 0
+  if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0
   ) {
     console.log('Enter a positive, uneven whole number.')
   }
-  } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 !== 0)
+  } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
 
   console.log(`Number of enemies set to: ${numberOfEnemies}`)
   return numberOfEnemies;
