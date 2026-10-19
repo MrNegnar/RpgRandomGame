@@ -164,6 +164,9 @@ function chooseCharacterRace() {
       characterSettings.race = Races.DWARF;
       break
     case 4:
+      characterSettings.race = Races.GNOME;
+      break
+    case 5:
       characterSettings.race = Races.ORC;
       break
     default:
