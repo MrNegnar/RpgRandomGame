@@ -3,15 +3,17 @@
 import readlineSync from 'readline-sync'
 import { Player } from './game/character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
-import { characterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
-import { Races } from './game/character/tournamentRpgCharacter/race.js'
-import { Game } from './game/Game.js'
+import { CharacterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
+import { Races } from './game/character/tournamentRpgCharacter/Race.js'
+import { Game } from './game/game.js'
 import { Dice } from 'rpg-fight-encounter'
+import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 
 export const characterSettings = {
   name: "",
-  characterClasses,
-  Races,
+  CharacterClass: undefined as
+    (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined,
+  Race,
   stats: {}
 }
 
@@ -28,9 +30,9 @@ function main(): void {
 
   try {
     console.log("Hello user, what is your name?")
-    const userName = readlineSync.question("Enter your name: ")
-    console.log(`Welcome, ${userName}!`)
-    getStartMenuChoice()
+    characterSettings.name = readlineSync.question("Enter your name: ")
+    console.log(`Welcome, ${characterSettings.name}!`)
+    startMenuChoice()
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
     process.exitCode = 1
@@ -43,13 +45,13 @@ function main(): void {
  * @throws {Error} If the user enters an invalid choice.
  * @returns {void} This function does not return a value.
  */
-function getStartMenuChoice() {
+function startMenuChoice() {
     console.log("Prepare for a tournament fight!")
     console.log("What do you want to do?")
     console.log("1. Start character creation")
     console.log("2. Exit")
 
-    const startMenuChoice = parseInt(readlineSync.keyIn(readlineSync.question("Enter your choice: ")))
+    const startMenuChoice = Number(readlineSync.question("Enter your choice: "))
 
     switch (startMenuChoice) {
       case 1:
@@ -86,32 +88,28 @@ function charactercreation() {
  * @returns {void} This function does not return a value.
  */
   function chooseCharacterClass() {
-    for (let i = 0; i < characterClasses.length; i++) {
-      console.log(`${i + 1}. ${characterClasses[i]} has the statbonuses applied`)
-      console.log(`strength: ${characterClasses[i].stats.strength}`)
-      console.log(`dexterity: ${characterClasses[i].stats.dexterity}`)
-      console.log(`constitution: ${characterClasses[i].stats.constitution}`)
-      console.log(`intelligence: ${characterClasses[i].stats.intelligence}`)
-      console.log(`wisdom: ${characterClasses[i].stats.wisdom}`)
+    for (const [characterClass, classData] of Object.entries(CharacterClasses)) {
+        console.log(`${characterClass}:`)
+        console.log(`strengthbonus: ${classData.strengthBonus}`)
+        console.log(`dexteritybonus: ${classData.dexterityBonus}`)
+        console.log(`constitutionbonus: ${classData.constitutionBonus}`)
+        console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
+        console.log(`wisdombonus: ${classData.wisdomBonus}`)
     }
     const characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
 
   switch (characterClassChoice) {
     case 1:
-      characterSettings.characterClasses = "Fighter";
-      createCharacterStats()
+      characterSettings.CharacterClass = CharacterClasses.FIGHTER;
       break
     case 2:
-      characterSettings.characterClasses = "Mage";
-      createCharacterStats()
+      characterSettings.CharacterClass = CharacterClasses.ROGUE;
       break
     case 3:
-      characterSettings.characterClasses = "Cleric";
-      createCharacterStats()
+      characterSettings.CharacterClass = CharacterClasses.MAGE;
       break
     case 4:
-      characterSettings.characterClasses = "Rogue";
-      createCharacterStats()
+      characterSettings.CharacterClass = CharacterClasses.CLERIC;
       break
     default:
       console.log("Invalid choice. Please try again.")
@@ -124,44 +122,48 @@ function charactercreation() {
  */
 function createCharacterStats() {
   const dice = new Dice()
+    const strengthArr = dice.rollDice(3, 6)
+    const dexterityArr = dice.rollDice(3, 6)
+    const constitutionArr = dice.rollDice(3, 6)
+    const intelligenceArr = dice.rollDice(3, 6)
+    const wisdomArr = dice.rollDice(3, 6)
   characterSettings.stats = {
-    strength: dice.rollDice(3, 6),
-    dexterity: dice.rollDice(3, 6),
-    constitution: dice.rollDice(3, 6),
-    intelligence: dice.rollDice(3, 6),
-    wisdom: dice.rollDice(3, 6)
+    strength: strengthArr.reduce((a, b) => a + b, 0),
+    dexterity: dexterityArr.reduce((a, b) => a + b, 0),
+    constitution: constitutionArr.reduce((a, b) => a + b, 0),
+    intelligence: intelligenceArr.reduce((a, b) => a + b, 0),
+    wisdom: wisdomArr.reduce((a, b) => a + b, 0)
   }
   console.log("Character stats have been generated:", characterSettings.stats)
-  chooseCharacterRace()
 }
 
 /**
  * Displays the character race selection menu and handles the user's choice.
  */
 function chooseCharacterRace() {
-  for (let i = 0; i < Races.length; i++) {
-    console.log(`${i + 1}. ${Races[i]} has the statbonuses applied: `)
-    console.log(`strength: ${Races[i].stats.strength}`)
-    console.log(`dexterity: ${Races[i].stats.dexterity}`)
-    console.log(`constitution: ${Races[i].stats.constitution}`)
-    console.log(`intelligence: ${Races[i].stats.intelligence}`)
-    console.log(`wisdom: ${Races[i].stats.wisdom}`)
-  }
+    for (const [Race, raceData] of Object.entries(Races)) {
+        console.log(`${Race}:`)
+        console.log(`strengthbonus: ${raceData.strengthBonus}`)
+        console.log(`dexteritybonus: ${raceData.dexterityBonus}`)
+        console.log(`constitutionbonus: ${raceData.constitutionBonus}`)
+        console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
+        console.log(`wisdombonus: ${raceData.wisdomBonus}`)
+    }
 
   const raceChoice = parseInt(readlineSync.question("Enter your choice: ")) 
 
   switch (raceChoice) {
     case 1:
-      characterSettings.Races = Races.HUMAN;
+      characterSettings.Race = Races.HUMAN;
       break
     case 2:
-      characterSettings.Races = Races.ELF;
+      characterSettings.Race = Races.ELF;
       break
     case 3:
-      characterSettings.Races = Races.DWARF;
+      characterSettings.Race = Races.DWARF;
       break
     case 4:
-      characterSettings.Races = Races.ORC;
+      characterSettings.Race = Races.ORC;
       break
     default:
       console.log("Invalid choice. Please try again.")
@@ -186,6 +188,9 @@ function decideEnemyNumber() {
  */
 function createEnemys(numberOfEnemies: number) {
   for (let i = 0; i < numberOfEnemies; i++) {
+    const enemyIndex = Math.floor(Math.random() * Object.keys(EnemyObject).length)
+    const enemy = new Enemy({ characterSettings: EnemyObject[Object.keys(EnemyObject)[enemyIndex]] })
+  }
 }
 
 /**
