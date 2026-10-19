@@ -8,9 +8,9 @@ export class Enemy extends Character {
   /**
    * Constructs a new Enemy instance using the provided array of enemy information.
    *
-   * @param EnemyArray An array containing the enemy's information, which will be passed to the Character constructor.
+   * @param characterSettings The settings used to configure the enemy character.
    */
-  constructor(EnemyArray: CharacterInfo[]) {
-    super(...EnemyArray)
+  constructor({ characterSettings }: { characterSettings: any }) {
+    super({ characterSettings })
   }
 }

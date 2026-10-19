@@ -28,21 +28,9 @@ export abstract class Character {
   /**
    * Constructs a new Character instance with the specified attributes.
    *
-   * @param name The name of the character
-   * @param race The race (object) of the character
-   * @param characterClass the class (object) of the character
-   * @param maxHealth The maximum health of the character
-   * @param speed The speed attribute of the character
-   * @param armor The armor attribute of the character
-   * @param evasion The evasion attribute of the character
-   * @param strength The strength attribute of the character
-   * @param dexterity The dexterity attribute of the character
-   * @param constitution The constitution attribute of the character
-   * @param intelligence The intelligence attribute of the character
-   * @param wisdom The wisdom attribute of the character
+   * @param characterSettings The settings used to configure the character.
    */
-  constructor(name: string, race: Race, characterClass: CharacterClass, maxHealth: number, speed: number, armor: number, evasion: number,
-    strength: number, dexterity: number, constitution: number, intelligence: number, wisdom: number){
+  constructor({ characterSettings }: { characterSettings: any }){
 
     if (name == null || race == null || characterClass == null || maxHealth == null || isNaN(maxHealth) ||speed == null || armor == null ||
     strength == null || dexterity == null || constitution == null || intelligence == null || wisdom == null) {
@@ -51,8 +39,6 @@ export abstract class Character {
     this.name = name
     this.race = Races[race]
     this.class = CharacterClasses[characterClass]
-    this.maxHealth = maxHealth
-    this.currentHitpoints = maxHealth;
     this.speed = speed
     this.armor = armor
     this.evasion = evasion

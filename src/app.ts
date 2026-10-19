@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
-import { Character } from './game/character/tournamentRpgCharacter/Character.js'
 import { Player } from './game/character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
 import { characterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
@@ -55,6 +54,7 @@ function getStartMenuChoice() {
     switch (startMenuChoice) {
       case 1:
         charactercreation()
+        startTheGame()
         break
       case 2:
         console.log("Exiting game...")
@@ -76,6 +76,7 @@ function charactercreation() {
   chooseCharacterRace()
   const player = new Player({ characterSettings })
   game.addPlayer(player)
+  decideEnemyNumber()
 }
 
 /**
@@ -184,6 +185,16 @@ function decideEnemyNumber() {
  * @param numberOfEnemies The number of enemy characters to create.
  */
 function createEnemys(numberOfEnemies: number) {
+  for (let i = 0; i < numberOfEnemies; i++) {
+}
+
+/**
+ * Starts the game.
+ * This function is called after all character and enemy setup is complete.
+ * This is where the main game loop or logic would be implemented.
+ */
+function startTheGame() {
+  console.log("The game is starting...")
 
 }
 
