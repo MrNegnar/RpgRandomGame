@@ -52,7 +52,7 @@ function startMenuChoice() {
     console.log("1. Start character creation")
     console.log("2. Exit")
 
-    const startMenuChoice = Number(readlineSync.question("Enter your choice: "))
+    const startMenuChoice = parseInt(readlineSync.question("Enter your choice: "))
 
     switch (startMenuChoice) {
       case 1:
@@ -184,11 +184,21 @@ function chooseCharacterRace() {
  * @returns The number of enemies decided by the user.
  */
 function decideEnemyNumber(): number {
-  console.log("This is a tournament fighter, so it need to be balanced.")
+  console.log("This is a tournament fighter, so it needs to be balanced.")
   let numberOfEnemies: number;
   do {
-    numberOfEnemies = parseInt(readlineSync.question("Enter the number of enemies: "))
-  } while (isNaN(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 !== 0)
+    numberOfEnemies = Number(
+    readlineSync.question('Enter a positive, uneven number of enemies: '),
+  )
+
+  if (
+    !Number.isInteger(numberOfEnemies) ||
+    numberOfEnemies <= 0 ||
+    numberOfEnemies % 2 !== 0
+  ) {
+    console.log('Enter a positive, uneven whole number.')
+  }
+  } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 !== 0)
 
   console.log(`Number of enemies set to: ${numberOfEnemies}`)
   return numberOfEnemies;
