@@ -16,8 +16,8 @@ export class Player extends Character {
    *
    * @param characterSettings The settings used to configure the player character.
    */
-  constructor(characterSettings: {}) {
-    super({ characterSettings })
+  constructor(characterSettings: CharacterSettings) {
+    super(characterSettings)
     this.race = Races[race]
     this.class = CharacterClasses[characterClass]
   }

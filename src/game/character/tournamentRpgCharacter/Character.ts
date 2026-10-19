@@ -29,12 +29,7 @@ export abstract class Character {
    *
    * @param characterSettings The settings used to configure the character.
    */
-  constructor({ characterSettings }: { characterSettings: any }){
-
-    if (!characterSettings.name || !characterSettings.race || !characterSettings.characterClass || !characterSettings.maxHealth || isNaN(characterSettings.maxHealth) || !characterSettings.speed || !characterSettings.armor ||
-        !characterSettings.evasion || !characterSettings.strength || !characterSettings.dexterity || !characterSettings.constitution || !characterSettings.intelligence || !characterSettings.wisdom) {
-      throw new Error("Invalid Character initialization, all parameters must be provided");
-    }
+  constructor(){
     this.name = name
     this.speed = speed
     this.armor = armor

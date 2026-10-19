@@ -77,9 +77,12 @@ function charactercreation() {
   chooseCharacterClass()
   createCharacterStats()
   chooseCharacterRace()
-  const player = new Player({ characterSettings })
+  const player = new Player(characterSettings)
   game.addPlayer(player)
-  decideEnemyNumber()
+  const howMamyEnemies = decideEnemyNumber()
+  for (let i = 0; i < howMamyEnemies; i++) {
+    createEnemy()
+  }
 }
 
 /**
@@ -177,26 +180,29 @@ function chooseCharacterRace() {
 
 /**
  * Prompts the user to decide the number of enemies for the game and updates the enemy settings accordingly.
+ * 
+ * @returns The number of enemies decided by the user.
  */
-function decideEnemyNumber() {
+function decideEnemyNumber(): number {
   console.log("This is a tournament fighter, so it need to be balanced.")
-  const numberOfEnemies = parseInt(readlineSync.question("Enter the number of enemies: "))
+  let numberOfEnemies: number;
+  do {
+    numberOfEnemies = parseInt(readlineSync.question("Enter the number of enemies: "))
+  } while (isNaN(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 !== 0)
+
   console.log(`Number of enemies set to: ${numberOfEnemies}`)
-  createEnemys(numberOfEnemies)
+  return numberOfEnemies;
 }
 
 /**
  * Creates enemy characters for the game based on the enemy settings.
- *
- * @param numberOfEnemies The number of enemy characters to create.
+ * Creates a single enemy character and adds it to the game.
  */
-function createEnemys(numberOfEnemies: number) {
-  for (let i = 0; i < numberOfEnemies; i++) {
-    const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
-    const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
-    const enemy = new Enemy(EnemyObject[name])
-    game.addEnemy(enemy)
-  }
+function createEnemy() {
+  const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
+  const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
+  const enemy = new Enemy(EnemyObject[name])
+  game.addEnemy(enemy)
 }
 
 /**
