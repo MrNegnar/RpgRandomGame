@@ -94,6 +94,13 @@ function charactercreation() {
 }
 
 /**
+ * This will start the actual gameplay of the game.
+ */
+function playTheGame() {
+
+}
+
+/**
  * Displays the character class selection menu and handles the user's choice.
  *
  * @throws {Error} If the user enters an invalid choice.

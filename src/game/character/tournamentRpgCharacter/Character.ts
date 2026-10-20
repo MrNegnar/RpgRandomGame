@@ -178,6 +178,33 @@ export abstract class Character implements CombatantInterface {
   }
 
   /**
+   * Applies healing to the character, increasing their current hit points by the specified amount.
+   * Ensures that the current hit points do not exceed the maximum health.
+   *
+   * @param healAmount The amount of healing to apply to the character's current hit points.
+   */
+  public takeHealing(healAmount: number): void {
+    this.currentHitpoints += healAmount
+    if (this.currentHitpoints > this.maxHealth) {
+      this.currentHitpoints = this.maxHealth
+    }
+  }
+
+  /**
+   * Increases the character's evasion attribute by 1.
+   */
+  public raiseEvasion(): void {
+    this.evasion += 1
+  }
+
+  /**
+   * Increases the character's armor attribute by 1.
+   */
+  public raiseArmor(): void {
+    this.armor += 1
+  }
+
+  /**
    * Validates whether the character is still alive based on current hit points.
    * 
    * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
