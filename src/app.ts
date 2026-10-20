@@ -22,7 +22,8 @@ export const characterSettings = {
     constitution: Number,
     intelligence: Number,
     wisdom: Number,
-  }
+  },
+  maxHealth: Number,
 }
 
 const game = new Game()

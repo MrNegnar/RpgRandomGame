@@ -10,6 +10,7 @@ export abstract class Character {
   private speed: number;
   private armor: number;
   private evasion: number;
+
   private strength: number;
   private dexterity: number;
   private constitution: number;
@@ -27,25 +28,23 @@ export abstract class Character {
    *
    * @param characterSettings The settings used to configure the character.
    * @param characterSettings.name The name of the character.
-   * @param characterSettings.speed The speed attribute of the character.
    * @param characterSettings.armor The armor attribute of the character.
-   * @param characterSettings.evasion The evasion attribute of the character.
    * @param characterSettings.strength The strength attribute of the character.
    * @param characterSettings.dexterity The dexterity attribute of the character.
    * @param characterSettings.constitution The constitution attribute of the character.
    * @param characterSettings.intelligence The intelligence attribute of the character.
    * @param characterSettings.wisdom The wisdom attribute of the character.
+   * @param characterSettings.maxHealth The maximum health of the character.
    */
   constructor(characterSettings: {
     name: string;
-    speed: number;
     armor: number;
-    evasion: number;
     strength: number;
     dexterity: number;
     constitution: number;
     intelligence: number;
     wisdom: number;
+    maxHealth: number;
   }) {
     this.name = characterSettings.name
     this.armor = characterSettings.armor
@@ -61,6 +60,8 @@ export abstract class Character {
     this.wisdomModifier = Math.floor((this.wisdom - 10) / 2)
     this.evasion = 1 + this.dexterityModifier
     this.speed = 1 + this.dexterityModifier
+    this.maxHealth = characterSettings.maxHealth
+    this.currentHitpoints = characterSettings.maxHealth
   }
 
   /**

@@ -17,29 +17,34 @@ export class Player extends Character {
    */
   constructor(characterSettings: any) {
     super(
-      characterSettings.name,
-      characterSettings.armor,
       {
-        strength:
-          characterSettings.stats.strength +
-          characterSettings.race.strengthBonus +
-          characterSettings.characterClass.strengthBonus,
-        dexterity:
-          characterSettings.stats.dexterity +
-          characterSettings.race.dexterityBonus +
-          characterSettings.characterClass.dexterityBonus,
-        constitution:
-          characterSettings.stats.constitution +
-          characterSettings.race.constitutionBonus +
-          characterSettings.characterClass.constitutionBonus,
-        intelligence:
-          characterSettings.stats.intelligence +
-          characterSettings.race.intelligenceBonus +
-          characterSettings.characterClass.intelligenceBonus,
-        wisdom:
-          characterSettings.stats.wisdom +
-          characterSettings.race.wisdomBonus +
-          characterSettings.characterClass.wisdomBonus
+      name: characterSettings.name,
+      armor: characterSettings.armor,
+      strength:
+        characterSettings.stats.strength +
+        characterSettings.race.strengthBonus +
+        characterSettings.characterClass.strengthBonus,
+      dexterity:
+        characterSettings.stats.dexterity +
+        characterSettings.race.dexterityBonus +
+        characterSettings.characterClass.dexterityBonus,
+      constitution:
+        characterSettings.stats.constitution +
+        characterSettings.race.constitutionBonus +
+        characterSettings.characterClass.constitutionBonus,
+      intelligence:
+        characterSettings.stats.intelligence +
+        characterSettings.race.intelligenceBonus +
+        characterSettings.characterClass.intelligenceBonus,
+      wisdom:
+        characterSettings.stats.wisdom +
+        characterSettings.race.wisdomBonus +
+        characterSettings.characterClass.wisdomBonus,
+      maxHealth: 10 + Math.floor((
+        characterSettings.stats.maxHealth +
+        characterSettings.race.maxHealthBonus +
+        characterSettings.characterClass.maxHealthBonus
+        -10 ) / 2)
       }
     )
     this.race = characterSettings.race
