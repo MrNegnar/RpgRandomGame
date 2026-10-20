@@ -5,7 +5,7 @@ import { Player } from './game/character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
 import { CharacterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
 import { Races } from './game/character/tournamentRpgCharacter/Race.js'
-import { Game } from './game/game.js'
+import { Game } from './game/Game.js'
 import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 
@@ -15,7 +15,14 @@ export const characterSettings = {
     (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined,
   race: undefined as
     (typeof Races)[keyof typeof Races] | undefined,
-  stats: {}
+  armor: 1,
+  stats: {
+    strength: Number,
+    dexterity: Number,
+    constitution: Number,
+    intelligence: Number,
+    wisdom: Number,
+  }
 }
 
 const game = new Game()

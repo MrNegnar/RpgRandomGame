@@ -1,6 +1,3 @@
-import { Races, type Race } from './Race.js';
-import { CharacterClasses, type CharacterClass } from './characterClasses.js';
-
 /**
  * An abstract class representing a character in the tournament RPG game.
  */
@@ -18,6 +15,7 @@ export abstract class Character {
   private constitution: number;
   private intelligence: number;
   private wisdom: number;
+
   private strengthModifier: number;
   private dexterityModifier: number;
   private constitutionModifier: number;
@@ -37,8 +35,6 @@ export abstract class Character {
    * @param characterSettings.constitution The constitution attribute of the character.
    * @param characterSettings.intelligence The intelligence attribute of the character.
    * @param characterSettings.wisdom The wisdom attribute of the character.
-   * @param characterSettings.raceBonus The race bonus applied to the character's attributes.
-   * @param characterSettings.characterClassBonus The character class bonus applied to the character's attributes.
    */
   constructor(characterSettings: {
     name: string;
@@ -50,23 +46,21 @@ export abstract class Character {
     constitution: number;
     intelligence: number;
     wisdom: number;
-    raceBonus?: Race;
-    characterClassBonus?: CharacterClass;
   }) {
     this.name = characterSettings.name
-    this.speed = characterSettings.speed
     this.armor = characterSettings.armor
-    this.evasion = characterSettings.evasion
-    this.strength = characterSettings.strength + (characterSettings.raceBonus?.strengthBonus + characterSettings.characterClassBonus?.strengthBonus ?? 0)
-    this.dexterity = characterSettings.dexterity + (characterSettings.raceBonus?.dexterityBonus + characterSettings.characterClassBonus?.dexterityBonus ?? 0)
-    this.constitution = characterSettings.constitution + (characterSettings.raceBonus?.constitutionBonus + characterSettings.characterClassBonus?.constitutionBonus ?? 0)
-    this.intelligence = characterSettings.intelligence + (characterSettings.raceBonus?.intelligenceBonus + characterSettings.characterClassBonus?.intelligenceBonus ?? 0)
-    this.wisdom = characterSettings.wisdom + (characterSettings.raceBonus?.wisdomBonus + characterSettings.characterClassBonus?.wisdomBonus ?? 0)
+    this.strength = characterSettings.strength
+    this.dexterity = characterSettings.dexterity
+    this.constitution = characterSettings.constitution
+    this.intelligence = characterSettings.intelligence
+    this.wisdom = characterSettings.wisdom
     this.strengthModifier = Math.floor((this.strength - 10) / 2)
     this.dexterityModifier = Math.floor((this.dexterity - 10) / 2)
     this.constitutionModifier = Math.floor((this.constitution - 10) / 2)
     this.intelligenceModifier = Math.floor((this.intelligence - 10) / 2)
     this.wisdomModifier = Math.floor((this.wisdom - 10) / 2)
+    this.evasion = 1 + this.dexterityModifier
+    this.speed = 1 + this.dexterityModifier
   }
 
   /**
@@ -166,6 +160,51 @@ export abstract class Character {
    */
   public getWisdom(): number {
     return this.wisdom
+  }
+
+  /**
+   * Returns the strength modifier of the character.
+   *
+   * @returns The strength modifier of the character.
+   */
+  public getStrengthModifier(): number {
+    return this.strengthModifier
+  }
+
+  /**
+   * Returns the dexterity modifier of the character.
+   *
+   * @returns The dexterity modifier of the character.
+   */
+  public getDexterityModifier(): number {
+    return this.dexterityModifier
+  }
+
+  /**
+   * Returns the constitution modifier of the character.
+   *
+   * @returns The constitution modifier of the character.
+   */
+  public getConstitutionModifier(): number {
+    return this.constitutionModifier
+  }
+
+  /**
+   * Returns the intelligence modifier of the character.
+   *
+   * @returns The intelligence modifier of the character.
+   */
+  public getIntelligenceModifier(): number {
+    return this.intelligenceModifier
+  }
+
+  /**
+   * Returns the wisdom modifier of the character.
+   *
+   * @returns The wisdom modifier of the character.
+   */
+  public getWisdomModifier(): number {
+    return this.wisdomModifier
   }
 
   /**

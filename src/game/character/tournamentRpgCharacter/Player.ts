@@ -1,5 +1,4 @@
 import { Character } from './Character.js'
-import type { StatBonuses } from './statBonuses.js'
 import { Races } from './Race.js'
 import { CharacterClasses } from './characterClasses.js'
 
@@ -14,12 +13,37 @@ export class Player extends Character {
   /**
    * Constructs a new Player instance using the provided array of player information.
    *
-   * @param characterSettings The settings used to configure the player character.
+   * @param characterSettings The settings used to configure the player character, of type `settings`.
    */
-  constructor(characterSettings: CharacterSettings) {
-    super(characterSettings)
-    this.race = Races[characterSettings.race]
-    this.class = CharacterClasses[characterSettings.characterClass]
+  constructor(characterSettings: any) {
+    super(
+      characterSettings.name,
+      characterSettings.armor,
+      {
+        strength:
+          characterSettings.stats.strength +
+          characterSettings.race.strengthBonus +
+          characterSettings.characterClass.strengthBonus,
+        dexterity:
+          characterSettings.stats.dexterity +
+          characterSettings.race.dexterityBonus +
+          characterSettings.characterClass.dexterityBonus,
+        constitution:
+          characterSettings.stats.constitution +
+          characterSettings.race.constitutionBonus +
+          characterSettings.characterClass.constitutionBonus,
+        intelligence:
+          characterSettings.stats.intelligence +
+          characterSettings.race.intelligenceBonus +
+          characterSettings.characterClass.intelligenceBonus,
+        wisdom:
+          characterSettings.stats.wisdom +
+          characterSettings.race.wisdomBonus +
+          characterSettings.characterClass.wisdomBonus
+      }
+    )
+    this.race = characterSettings.race
+    this.class = characterSettings.characterClass
   }
 
   /**
