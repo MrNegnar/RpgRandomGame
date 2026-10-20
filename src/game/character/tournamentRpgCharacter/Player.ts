@@ -18,7 +18,25 @@ export class Player extends Character {
    */
   constructor(characterSettings: CharacterSettings) {
     super(characterSettings)
-    this.race = Races[race]
-    this.class = CharacterClasses[characterClass]
+    this.race = Races[characterSettings.race]
+    this.class = CharacterClasses[characterSettings.characterClass]
+  }
+
+  /**
+   * Returns the race  of the character
+   *
+   * @returns Returns the race of the character
+   */
+  public getRace(): typeof Races[keyof typeof Races] {
+    return this.race
+  }
+  
+  /**
+   * Returns the class of the character
+   *
+   * @returns Returns the class of the character
+   */
+  public getClass(): typeof CharacterClasses[keyof typeof CharacterClasses] {
+    return this.class
   }
 }
