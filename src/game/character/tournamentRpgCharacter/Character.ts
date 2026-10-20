@@ -1,7 +1,9 @@
+import type { CombatantInterface } from 'rpg-fight-encounter/src/V_02/index.js'
+
 /**
  * An abstract class representing a character in the tournament RPG game.
  */
-export abstract class Character {
+export abstract class Character implements CombatantInterface {
 
 
   private name: string;
@@ -119,51 +121,6 @@ export abstract class Character {
   }
 
   /**
-   * Returns the strength attribute of the character.
-   *
-   * @returns The strength attribute of the character.
-   */
-  public getStrength(): number {
-    return this.strength
-  }
-
-  /**
-   * Returns the dexterity attribute of the character.
-   *
-   * @returns The dexterity attribute of the character.
-   */
-  public getDexterity(): number {
-    return this.dexterity
-  }
-
-  /**
-   * Returns the constitution attribute of the character.
-   *
-   * @returns The constitution attribute of the character.
-   */
-  public getConstitution(): number {
-    return this.constitution
-  }
-
-  /**
-   * Returns the intelligence attribute of the character.
-   *
-   * @returns The intelligence attribute of the character.
-   */
-  public getIntelligence(): number {
-    return this.intelligence
-  }
-
-  /**
-   * Returns the wisdom attribute of the character.
-   *
-   * @returns The wisdom attribute of the character.
-   */
-  public getWisdom(): number {
-    return this.wisdom
-  }
-
-  /**
    * Returns the strength modifier of the character.
    *
    * @returns The strength modifier of the character.
@@ -209,11 +166,23 @@ export abstract class Character {
   }
 
   /**
+   * Reduces the character's current hit points by the specified damage amount. If the resulting hit points are less than 0, they are set to 0.
+   *
+   * @param damage The amount of damage to apply to the character's current hit points.
+   */
+  public takeDamage(damage: number): void {
+    this.currentHitpoints -= damage
+    if (this.currentHitpoints < 0) {
+      this.currentHitpoints = 0
+    }
+  }
+
+  /**
    * Validates whether the character is still alive based on current hit points.
    * 
    * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
    */
-  private isAlive(): boolean {
+  public isAlive(): boolean {
     return this.currentHitpoints > 0
   }
 
