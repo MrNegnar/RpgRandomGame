@@ -17,13 +17,13 @@ export const characterSettings = {
     (typeof Races)[keyof typeof Races] | undefined,
   armor: 1,
   stats: {
-    strength: Number,
-    dexterity: Number,
-    constitution: Number,
-    intelligence: Number,
-    wisdom: Number,
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intelligence: 0,
+    wisdom: 0,
   },
-  maxHealth: Number,
+  maxHealth: 10,
 }
 
 const game = new Game()

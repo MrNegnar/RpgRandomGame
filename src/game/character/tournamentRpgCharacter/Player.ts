@@ -40,10 +40,11 @@ export class Player extends Character {
         characterSettings.stats.wisdom +
         characterSettings.race.wisdomBonus +
         characterSettings.characterClass.wisdomBonus,
-      maxHealth: 10 + Math.floor((
-        characterSettings.stats.maxHealth +
-        characterSettings.race.maxHealthBonus +
-        characterSettings.characterClass.maxHealthBonus
+      maxHealth: characterSettings.maxHealth +
+        Math.floor((
+        characterSettings.stats.constitution +
+        characterSettings.race.constitutionBonus +
+        characterSettings.characterClass.constitutionBonus
         -10 ) / 2)
       }
     )
