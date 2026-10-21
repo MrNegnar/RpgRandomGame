@@ -42,7 +42,7 @@ function main(): void {
     console.log("Hello user, what is your name?")
     characterSettings.name = readlineSync.question("Enter your name: ")
     console.log(`Welcome, ${characterSettings.name}!`)
-    startMenuChoice()
+    startMenu()
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
     process.exitCode = 1
@@ -55,27 +55,40 @@ function main(): void {
  * @throws {Error} If the user enters an invalid choice.
  * @returns {void} This function does not return a value.
  */
-function startMenuChoice() {
+function startMenu() {
+  let startMenuChoice: number
+  do {
     console.log("Prepare for a tournament fight!")
     console.log("What do you want to do?")
     console.log("1. Start character creation")
-    console.log("2. Exit")
+    console.log("2. view information about the game")
+    console.log("3. Exit")
 
-    const startMenuChoice = parseInt(readlineSync.question("Enter your choice: "))
+    startMenuChoice = parseInt(readlineSync.question("Enter your choice: "))
 
     switch (startMenuChoice) {
       case 1:
         charactercreation()
         break
       case 2:
+        console.log("\nThis is a tournament RPG game where you create a character, fight enemies, and progress through fights.")
+        console.log("You can create your character, choose their class and race, and then engage in battles against enemies.")
+        console.log("strength, dexterity, constitution, intelligence, and wisdom are the primary stats that define your character's abilities.")
+        console.log("Your character's race and class will provide additional bonuses and abilities.")
+        console.log("\nThe stat strength determines your character's physical power and adds damage to attacks.")
+        console.log("The stat dexterity affects your character's ability to hit the enemy and evade attacks.")
+        console.log("The stat constitution affects your character's health.")
+        console.log("The stat intelligence affects your character's magical abilities.")
+        console.log("The stat wisdom affects your character's ability to heal.\n")
+        break
+      case 3:
         console.log("Exiting game...")
-        process.exit(0)
         break
       default:
         console.log("Invalid choice. Please try again.")
         throw new Error("Invalid choice")
     }
-    return startMenuChoice
+  } while (startMenuChoice !== 3)
 }
 
 /**
