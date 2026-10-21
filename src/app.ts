@@ -8,6 +8,7 @@ import { Races } from './game/character/tournamentRpgCharacter/Race.js'
 import { Game } from './game/Game.js'
 import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
+import { FightEncounterHandlerV02 as FightEncounterHandler, type ChoosePlayerActionV02 as ChoosePlayerAction } from 'rpg-fight-encounter'
 
 export const characterSettings = {
   name: "",
@@ -65,7 +66,6 @@ function startMenuChoice() {
     switch (startMenuChoice) {
       case 1:
         charactercreation()
-        startTheGame()
         break
       case 2:
         console.log("Exiting game...")
@@ -91,13 +91,80 @@ function charactercreation() {
   for (let i = 0; i < howMamyEnemies; i++) {
     createEnemy()
   }
+  playTheGame(game.getPlayers(), game.getEnemies())
 }
 
 /**
  * This will start the actual gameplay of the game.
+ * 
+ * @param players The array of player characters participating in the game.
+ * @param enemies The array of enemy characters participating in the game.
  */
-function playTheGame() {
+function playTheGame(players: Player[], enemies: Enemy[]): void {
+  const fight = new FightEncounterHandler(players, enemies)
+  const usedFightOption = choosingOptionDuringFight()
+  fight.goThroughFullFight(usedFightOption)
+}
 
+/**
+ * Handles the player's action choice during a fight encounter.
+ *
+ * @returns {ChoosePlayerAction<Player, Enemy>} The function that determines the player's actions during their turn.
+ */
+function choosingOptionDuringFight() {
+  /**
+   * Handles the player's action choice during a fight encounter.
+   *
+   * @param _player The player character whose turn is being handled.
+   * @param livingAllies The array of living allies of the player.
+   * @param livingOpponents The array of living opponents of the player.
+   * @returns The action chosen by the player for their turn.
+   */
+    const choosePlayerAction: ChoosePlayerAction<Player, Enemy> = (
+    _player,
+    livingAllies,
+    livingOpponents
+  ) => {
+      console.log('\n--- Fight status ---')
+  console.log(`${_player.getName()}: ${_player.getCurrentHitpoints()} HP`)
+
+  for (const enemy of livingOpponents) {
+    console.log(`${enemy.getName()}: ${enemy.getCurrentHitpoints()} HP`)
+  }
+    let choice: string
+
+    do {
+      console.log('\nChoose your action:')
+      console.log('1. Attack')
+      console.log('2. Offensive spell')
+      console.log('3. Raise armor')
+      console.log('4. Raise evasion')
+      console.log('5. Heal')
+      console.log('6. Skip turn')
+
+      choice = readlineSync.question('Enter your choice: ')
+
+      if (!['1', '2', '3', '4', '5', '6'].includes(choice)) {
+        console.log('Choose a number from 1 to 6.')
+      }
+    } while (!['1', '2', '3', '4', '5', '6'].includes(choice))
+
+    switch (choice) {
+      case '1':
+        return { type: 'attack', target: livingOpponents[0] }
+      case '2':
+        return { type: 'offensiveSpell', target: livingOpponents[0] }
+      case '3':
+        return { type: 'raiseArmor' }
+      case '4':
+        return { type: 'raiseEvasion' }
+      case '5':
+        return { type: 'heal', target: livingAllies[0] }
+      default:
+        return { type: 'skipTurn' }
+    }
+  }
+  return choosePlayerAction
 }
 
 /**
@@ -113,7 +180,7 @@ function playTheGame() {
         console.log(`dexteritybonus: ${classData.dexterityBonus}`)
         console.log(`constitutionbonus: ${classData.constitutionBonus}`)
         console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
-        console.log(`wisdombonus: ${classData.wisdomBonus}`)
+        console.log(`wisdombonus: ${classData.wisdomBonus}\n`)
     }
    let characterClassChoice;
     do {
@@ -172,7 +239,7 @@ function chooseCharacterRace() {
         console.log(`dexteritybonus: ${raceData.dexterityBonus}`)
         console.log(`constitutionbonus: ${raceData.constitutionBonus}`)
         console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
-        console.log(`wisdombonus: ${raceData.wisdomBonus}`)
+        console.log(`wisdombonus: ${raceData.wisdomBonus}\n`)
     }
     let raceChoice;
     do {
@@ -231,22 +298,13 @@ function decideEnemyNumber(): number {
 /**
  * Creates enemy characters for the game based on the enemy settings.
  * Creates a single enemy character and adds it to the game.
+ *
  */
-function createEnemy() {
+function createEnemy(): void {
   const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
   const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
   const enemy = new Enemy(EnemyObject[name])
   game.addEnemy(enemy)
-}
-
-/**
- * Starts the game.
- * This function is called after all character and enemy setup is complete.
- * This is where the main game loop or logic would be implemented.
- */
-function startTheGame() {
-  console.log("The game is starting...")
-
 }
 
 main()

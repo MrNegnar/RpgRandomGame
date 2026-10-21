@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "readline-sync": "^1.4.10",
-    "rpg-fight-encounter": "github:MrNegnar/DnDModule"
+    "rpg-fight-encounter": "github:MrNegnar/DnDModule#main",
+    "tournament-scheduler": "github:nordstrom-a/tournament-scheduler"
   }
 }

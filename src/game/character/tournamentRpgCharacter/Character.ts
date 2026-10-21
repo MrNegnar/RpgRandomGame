@@ -1,4 +1,4 @@
-import type { CombatantInterface } from 'rpg-fight-encounter/src/V_02/index.js'
+import type { CombatantInterface } from 'rpg-fight-encounter/src/index.js'
 
 /**
  * An abstract class representing a character in the tournament RPG game.

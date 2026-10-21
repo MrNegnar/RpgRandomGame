@@ -23,6 +23,24 @@ export class Game {
   public getParticipants(): any[] {
     return [...this.participants];
   }
+
+  /**
+   * Returns an array copy of players currently added to the game.
+   *
+   * @returns The array of players in the game.
+   */
+  public getPlayers(): any[] {
+    return [...this.players];
+  }
+
+  /**
+   * Returns an array copy of enemies currently added to the game.
+   *
+   * @returns The array of enemies in the game.
+   */
+  public getEnemies(): any[] {
+    return [...this.enemies];
+  }
   
   /**
    * Adds a player to the game.
