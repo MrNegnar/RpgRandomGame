@@ -8,7 +8,10 @@ import { Races } from './game/character/tournamentRpgCharacter/Race.js'
 import { Game } from './game/Game.js'
 import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
-import { FightEncounterHandlerV02 as FightEncounterHandler, type ChoosePlayerActionV02 as ChoosePlayerAction } from 'rpg-fight-encounter'
+import { FightEncounterHandlerV02 as FightEncounterHandler,
+  type ChoosePlayerActionV02 as ChoosePlayerAction } from 'rpg-fight-encounter'
+
+
 
 export const characterSettings = {
   name: "",
