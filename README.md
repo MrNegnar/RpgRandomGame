@@ -1,196 +1,135 @@
-# TypeScript CLI Template
+# RPG Random Game
 
-Welcome to the **1dv610** TypeScript Command-Line Interface (CLI) template. This repository serves as a clean, pre-configured boilerplate for building robust Node.js console applications with modern tools and best practices.
+RPG Random Game is a terminal game written in TypeScript. Create a character, enter a single elimination tournament, and fight randomly generated enemies. Every tournament match is a one-on-one fight handled by the V_02 version of the DnD combat module.
 
-## 🚀 Features
+## Requirements
 
-- **TypeScript, strict mode:** Full static typing with `strict` compiler checks enabled from the start.
-- **Modern ECMAScript Modules (ESM):** Full native support for `import`/`export` syntax, resolved via `NodeNext`.
-- **Fast local dev loop:** [tsx](https://github.com/privatenumber/tsx) runs `src/app.ts` directly, no build step needed while iterating.
-- **Unit Testing:** Pre-configured with [Vitest](https://vitest.dev) for blazing-fast test execution, including native TypeScript support.
-- **Linting & Code Quality:** Strict code analysis using [ESLint](https://eslint.org) integrated with custom `@lnu/eslint-config` rules, including its TypeScript layer.
-- **Code Formatting:** Automatic code style management via [Prettier](https://prettier.io).
+- Node.js 24.12.0 or later
+- npm
 
----
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
-Ensure you have **Node.js** (version 24.12.0 or later, per `engines` in `package.json`) and **Git** installed on your machine.
-
-### Installation & Project Setup
-
-Pick the flow that matches your situation.
-
-#### A. Starting from scratch (no repository yet) — recommended
-
-Use GitHub's built-in template flow — no git commands needed to get a clean, single-commit history:
-
-1. On GitHub, open this template repository and click **Use this template → Create a new repository**.
-2. Clone your new repository and move into it:
-
-   ```bash
-   git clone <your-newly-created-repository-url>
-   cd <your-repository-name>
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-GitHub gives your new repository its own single commit copied from this template — no shared history, nothing to merge or squash.
-
-> **Note:** This requires the template repository to have **Template repository** enabled under its GitHub Settings → General. If the "Use this template" button isn't available, use flow B instead.
-
-#### B. Importing into an existing repository (empty or not)
-
-Use this flow if you already have a repository — e.g. one provisioned by GitHub Classroom — that you can't or don't want to recreate from a template.
-
-1. Clone your existing repository and move into it:
-
-   ```bash
-   git clone <your-existing-repository-url>
-   cd <your-repository-name>
-   ```
-
-2. If the repository has no commits yet, create an empty initial commit:
-
-   ```bash
-   git commit --allow-empty -m "Initial commit"
-   ```
-
-   _Note: This step is required for a genuinely empty repository. A branch with zero commits has nothing for `--squash` to diff against, so `git pull --squash` silently falls back to a plain fast-forward — it imports this template's entire internal commit history unmodified instead of collapsing it into one clean commit. An empty commit gives `--squash` a (empty) tree to compare against, so it behaves as intended. Skip this step if the repository already has commits (e.g. an auto-generated README)._
-
-3. **Pull and squash the boilerplate code** from this template repository into your branch:
-
-   ```bash
-   git pull git@github.com:1dv610/ts-cli-template.git main --squash --allow-unrelated-histories
-   ```
-
-   _Note: Using `--squash` ensures that the boilerplate's internal development history is collapsed into a single, clean starting point in your repository. If your repository already had files (e.g. GitHub auto-created a README or `.gitignore`), this will report a conflict on those files — resolve it by taking the template's version: `git checkout --theirs <file> && git add <file>`._
-
-4. **Commit the imported files** to finalize the import of the boilerplate:
-
-   ```bash
-   git commit -m "Initial commit from boilerplate"
-   ```
-
-5. **Install the project dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-6. **Push the clean boilerplate setup** up to your own GitHub repository:
-   ```bash
-   git push origin main
-   ```
-
----
-
-## 💻 Available Scripts
-
-You can manage the application lifecycle, testing, and formatting using the following npm scripts:
-
-### Running the Application
-
-Runs the main console application entry point (`src/app.ts`) directly via `tsx` — no separate build step needed — optionally passing a name as the first argument:
+## Install and run
 
 ```bash
+npm install
 npm start
-npm start -- "Ada Lovelace"
 ```
 
-The `bin` entry in `package.json` makes the app runnable as a standalone command once built and linked (`npm run build && npm link`) or installed:
+The application asks for your name and then shows the main menu. Choose **1** to create a character and start a tournament.
 
-```bash
-ts-cli-template "Ada Lovelace"
+## Playing the game
+
+1. Choose a character class and race.
+2. The game rolls three six-sided dice for each stat: Strength, Dexterity, Constitution, Intelligence, and Wisdom. The chosen class and race add their bonuses to the rolls.
+3. Choose a positive odd number of enemies. Each enemy is randomly selected from the available enemy definitions.
+4. Your character and the enemies enter a single elimination tournament.
+5. Each match is one-on-one. The player chooses actions on their turn; enemies act automatically.
+6. The fight returns its winner to the tournament scheduler. The winner advances until the final produces a tournament champion.
+
+The player can choose to attack, cast an offensive spell, raise armor, raise evasion, heal, or skip a turn. In a one-on-one match, attacks target the opponent and healing targets the acting character.
+
+Character state carries between tournament matches. Winners keep their remaining HP and any armor or evasion increases gained in earlier fights. Starting another tournament from the menu resets the previous roster.
+
+## Tournament size and byes
+
+The game currently asks for an odd number of enemies. With one player, that creates an even total number of participants. However, an even number alone does not guarantee that every participant fights in every round. For example, six participants do not fit evenly into a single elimination bracket all the way to the final, so the scheduler advances some participants without a match in an early round. This is called a **bye**; it is not an elimination.
+
+To have no byes in a single elimination bracket, the total number of participants must be a power of two: 2, 4, 8, 16, and so on. With one player, that means 1, 3, 7, or 15 enemies. The current input accepts any positive odd enemy count, so a bye can still happen for some choices.
+
+## How the modules work together
+
+The RPG characters and the scheduler use different objects for different jobs:
+
+- `Player` and `Enemy` inherit from `Character`. These objects hold the character's stats and changing combat state, such as current HP, armor, and evasion.
+- The tournament scheduler works with `Participant` objects. It creates rounds and matches but does not run combat.
+- `tournamentAdapter.ts` creates one scheduler participant per character and keeps a map back to the original character object.
+- The DnD fight module receives the two characters for a match, runs combat, and returns the winning character.
+- The app records that character as the match winner. The scheduler then uses the result to create the next round.
+
+The key handoff in `playTheGame` looks like this:
+
+```ts
+const homeCharacter = roster.characterByParticipant.get(homeParticipant)
+const awayCharacter = roster.characterByParticipant.get(awayParticipant)
+
+const fight = new FightEncounterHandler<Character, Character>(
+  [firstFighter],
+  [secondFighter]
+)
+const winner = fight.goThroughFullFight(choosingOptionDuringFight())
+
+if (winner === homeCharacter) {
+  match.recordResult(1, 0)
+} else if (winner === awayCharacter) {
+  match.recordResult(0, 1)
+}
 ```
 
-_Note: Rename the `ts-cli-template` key in `package.json`'s `bin` field (and the `name` field) to match your own project when adapting this template._
+The scheduler only needs to know which participant won, so the app records a simple `1–0` or `0–1` result. The fight module is responsible for combat rules and the winner; the tournament scheduler is responsible for who advances.
 
-### Building
+## Main menu
 
-Compiles `src/` to plain JavaScript in `dist/`, which is what the `bin` entry and published package run:
+- **1. Start character creation** — create a character and run a tournament.
+- **2. View information about the game** — show a short description of the game and stats.
+- **3. Exit** — close the application.
 
-```bash
-npm run build
-```
-
-`dist/` is git-ignored — it's a build artifact, regenerated on demand (the `prepare` script also runs this automatically after `npm install`, so the `bin` command works right away).
-
-### Type Checking
-
-Runs the TypeScript compiler in check-only mode (no output files), including test files:
-
-```bash
-npm run typecheck
-```
-
-### Running Tests
-
-- **Interactive Watch Mode (Recommended for development):**
-  ```bash
-  npm test
-  ```
-- **Single Execution Run:**
-  ```bash
-  npm run test:run
-  ```
-- **Run Specific Tests (by matching name patterns):**
-  ```bash
-  npm run test:match -- <test-name-pattern>
-  ```
-
-### Code Linting
-
-Analyze the source code in `src/` for errors, syntax issues, and anti-patterns:
-
-```bash
-npm run lint
-```
-
-Automatically fix fixable linting issues:
-
-```bash
-npm run lint:fix
-```
-
-### Formatting
-
-Check if files comply with Prettier styling rules:
-
-```bash
-npm run format:check
-```
-
-Automatically reformat all source files:
-
-```bash
-npm run format
-```
-
----
-
-## 📁 Project Structure
+## Project structure
 
 ```text
-├── src/
-│   ├── app.ts       # Main application logic & execution entry point
-│   └── app.test.ts  # Unit tests for closely coupled application logic
-├── test/               # Integration and system tests (higher-level / E2E test flows)
-├── dist/               # Compiled JavaScript output (git-ignored, generated by `npm run build`)
-├── tsconfig.json       # Base TypeScript config (strict mode; used by the editor, typecheck, and Vitest)
-├── tsconfig.build.json # Build-only config: extends the base, emits to dist/, excludes test files
-├── package.json        # Project configuration, scripts, and dependencies
-└── LICENSE             # Unlicense (Public Domain dedication)
+src/
+├── app.ts                                      # CLI menus, tournament rounds, and fights
+├── tournamentAdapter.ts                       # Maps scheduler participants to RPG characters
+├── tournament-scheduler.d.ts                  # TypeScript declarations for the scheduler package
+└── game/
+    ├── Game.ts                                # Stores and resets players, enemies, and participants
+    └── character/tournamentRpgCharacter/
+        ├── Character.ts                       # Shared stats, HP, and combat state
+        ├── Player.ts                          # Player character and class/race bonuses
+        ├── Enemy.ts                           # Enemy character
+        ├── Race.ts                            # Race bonuses
+        ├── characterClasses.ts                # Class bonuses
+        └── enemies.ts                         # Enemy definitions
 ```
 
----
+## Screenshots
 
-## ⚖️ License
+### Start of app
 
-This project is released into the public domain under the **Unlicense**. You are free to copy, modify, publish, and distribute this boilerplate code in any way you see fit without any restrictions.
+When startining the game you will enter your name, stats will be rolled and the oprion for different classes will be offered.
+
+![Character creation screen](docs/images/startApp.png)
+
+### End of tournament
+
+During the fight multiple options of what to do next will be represented to the user.
+After the fight(s) a winner is decleared.
+
+![Tournament result screen](docs/images/winTournament.png)
+
+## Dependencies
+
+- [rpg-fight-encounter](https://github.com/MrNegnar/DnDModule) — runs V_02 combat and returns the fight winner.
+- [tournament-scheduler](https://github.com/nordstrom-a/tournament-scheduler) — creates the single elimination bracket, records match results, and advances winners.
+- [readline-sync](https://www.npmjs.com/package/readline-sync) — reads menu choices in the terminal.
+
+## Development commands
+
+```bash
+npm run typecheck    # Check TypeScript types without producing files
+npm run test:run     # Run tests once
+npm test             # Run Vitest in watch mode
+npm run build        # Build the application into dist/
+npm run lint         # Check source files with ESLint
+npm run format:check # Check formatting with Prettier
+```
+
+Vitest is configured for the project. The RPG app's test suite is currently being developed.
+
+## Author
+
+Created by:
+Thomas Landin
+Second year student at Linnaeus University, Kalmar.
+
+## License
+
+This project is released under the Unlicense. See [LICENSE](LICENSE) for details.
