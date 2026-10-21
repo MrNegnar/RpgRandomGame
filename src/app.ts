@@ -128,18 +128,24 @@ function choosingOptionDuringFight() {
   /**
    * Handles the player's action choice during a fight encounter.
    *
-   * @param _player The player character whose turn is being handled.
+   * @param character The player character whose turn is being handled.
    * @param livingAllies The array of living allies of the player.
    * @param livingOpponents The array of living opponents of the player.
    * @returns The action chosen by the player for their turn.
    */
     const choosePlayerAction: ChoosePlayerAction<Player, Enemy> = (
-    _player,
+    character,
     livingAllies,
     livingOpponents
   ) => {
+    if (!(character instanceof Player)) {
+      return {
+        type: 'attack',
+        target: livingOpponents[0],
+      }
+    }
       console.log('\n--- Fight status ---')
-  console.log(`${_player.getName()}: ${_player.getCurrentHitpoints()} HP`)
+  console.log(`${character.getName()}: ${character.getCurrentHitpoints()} HP`)
 
   for (const enemy of livingOpponents) {
     console.log(`${enemy.getName()}: ${enemy.getCurrentHitpoints()} HP`)
