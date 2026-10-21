@@ -41,6 +41,15 @@ export class Game {
   public getEnemies(): any[] {
     return [...this.enemies];
   }
+
+  /**
+   * Resets the participants, players, and enemies arrays to empty arrays.
+   */
+  public resetParticipants(): void {
+    this.participants = [];
+    this.players = [];
+    this.enemies = [];
+  }
   
   /**
    * Adds a player to the game.

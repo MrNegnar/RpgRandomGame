@@ -64,7 +64,7 @@ function main(): void {
 function startMenu() {
   let startMenuChoice: number
   do {
-    console.log("Prepare for a tournament fight!")
+    console.log("\nPrepare for a tournament fight!")
     console.log("What do you want to do?")
     console.log("1. Start character creation")
     console.log("2. view information about the game")
@@ -101,8 +101,11 @@ function startMenu() {
  * Handles the overall character creation process, including class, stats, and race selection, and adds the player to the game.
  */
 function charactercreation() {
-  chooseCharacterClass()
+  // Reset the game state before starting character creation.
+  // This is necessary to ensure that any previous game state does not interfere with the new character creation process.
+  game.resetParticipants()
   createCharacterStats()
+  chooseCharacterClass()
   chooseCharacterRace()
   const player = new Player(characterSettings)
   game.addPlayer(player)
@@ -199,7 +202,7 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
     throw new Error('The final match has no winner')
   }
 
-  console.log(`Tournament winner: ${champion.getName()}`)
+  console.log(`\nTournament winner: ${champion.getName()}`)
 
 }
 
