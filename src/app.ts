@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
+import { Character } from './game/character/tournamentRpgCharacter/Character.js'
 import { Player } from './game/character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
 import { CharacterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
@@ -10,6 +11,8 @@ import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 import { FightEncounterHandlerV02 as FightEncounterHandler,
   type ChoosePlayerActionV02 as ChoosePlayerAction } from 'rpg-fight-encounter'
+import { SingleEliminationScheduler } from 'tournament-scheduler'
+import { createTournamentRoster } from './tournamentAdapter.js'
 
 
 
@@ -117,9 +120,54 @@ function charactercreation() {
  * @param enemies The array of enemy characters participating in the game.
  */
 function playTheGame(players: Player[], enemies: Enemy[]): void {
-  const fight = new FightEncounterHandler(players, enemies)
-  const usedFightOption = choosingOptionDuringFight()
-  fight.goThroughFullFight(usedFightOption)
+  const characters: Character[] = [...players, ...enemies]
+  const roster = createTournamentRoster(characters)
+  const scheduler = new SingleEliminationScheduler()
+  const firstRound = scheduler.createFirstRound(roster.participants)
+
+  for (const match of firstRound.getMatches()) {
+    const homeParticipant = match.getHomeParticipant()
+    const awayParticipant = match.getAwayParticipant()
+
+    const homeCharacter = roster.characterByParticipant.get(homeParticipant)
+    const awayCharacter = roster.characterByParticipant.get(awayParticipant)
+
+    if (!homeCharacter || !awayCharacter) {
+      throw new Error('Could not find both characters for this match')
+    }
+
+    // Fightmodulen låter första sidan använda valfunktionen.
+    // Flytta därför spelaren dit om spelaren är matchens bortadeltagare.
+    let firstFighter = homeCharacter
+    let secondFighter = awayCharacter
+
+    if (
+      awayCharacter instanceof Player &&
+      !(homeCharacter instanceof Player)
+    ) {
+      firstFighter = awayCharacter
+      secondFighter = homeCharacter
+    }
+
+    console.log(
+      `Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`
+    )
+
+    const fight = new FightEncounterHandler<Character, Character>(
+      [firstFighter],
+      [secondFighter]
+    )
+
+    const winner = fight.goThroughFullFight(choosingOptionDuringFight())
+
+    if (winner === homeCharacter) {
+      match.recordResult(1, 0)
+    } else if (winner === awayCharacter) {
+      match.recordResult(0, 1)
+    } else {
+      throw new Error('Fight returned a winner outside this match')
+    }
+  }
 }
 
 /**
@@ -127,7 +175,7 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
  *
  * @returns {ChoosePlayerAction<Player, Enemy>} The function that determines the player's actions during their turn.
  */
-function choosingOptionDuringFight() {
+function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
   /**
    * Handles the player's action choice during a fight encounter.
    *
@@ -136,7 +184,7 @@ function choosingOptionDuringFight() {
    * @param livingOpponents The array of living opponents of the player.
    * @returns The action chosen by the player for their turn.
    */
-    const choosePlayerAction: ChoosePlayerAction<Player, Enemy> = (
+    const choosePlayerAction: ChoosePlayerAction<Character, Character> = (
     character,
     livingAllies,
     livingOpponents
