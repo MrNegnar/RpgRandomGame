@@ -92,10 +92,7 @@ describe('createTournamentRoster', () => {
     const roster = createTournamentRoster([player, enemy])
 
     expect(roster.participants).toHaveLength(2)
-    expect(roster.participants.map((participant) => participant.getName())).toEqual([
-      'Test Player',
-      'Goblin',
-    ])
+    expect(roster.participants.map((participant) => participant.getName())).toEqual(['Test Player', 'Goblin'])
     expect(roster.characterByParticipant.get(roster.participants[0])).toBe(player)
     expect(roster.characterByParticipant.get(roster.participants[1])).toBe(enemy)
   })
@@ -227,7 +224,6 @@ describe('createTournamentRoster with duplicate character names', () => {
   })
 })
 
-
 describe('Fight module integration', () => {
   it('continues to the enemy turn after the player misses', () => {
     const player = new Player({
@@ -278,4 +274,3 @@ describe('Fight module integration', () => {
     expect(returningPlayer.getCurrentHitpoints()).toBe(6)
   })
 })
-

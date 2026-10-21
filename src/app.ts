@@ -9,19 +9,17 @@ import { Races } from './game/character/tournamentRpgCharacter/Race.js'
 import { Game } from './game/Game.js'
 import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
-import { FightEncounterHandlerV02 as FightEncounterHandler,
-  type ChoosePlayerActionV02 as ChoosePlayerAction } from 'rpg-fight-encounter'
+import {
+  FightEncounterHandlerV02 as FightEncounterHandler,
+  type ChoosePlayerActionV02 as ChoosePlayerAction,
+} from 'rpg-fight-encounter'
 import { SingleEliminationScheduler } from 'tournament-scheduler'
 import { createTournamentRoster } from './tournamentAdapter.js'
 
-
-
 export const characterSettings = {
-  name: "",
-  characterClass: undefined as
-    (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined,
-  race: undefined as
-    (typeof Races)[keyof typeof Races] | undefined,
+  name: '',
+  characterClass: undefined as (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined,
+  race: undefined as (typeof Races)[keyof typeof Races] | undefined,
   armor: 1,
   stats: {
     strength: 0,
@@ -43,10 +41,9 @@ const game = new Game()
  * @returns {void} This function does not return a value.
  */
 function main(): void {
-
   try {
-    console.log("Hello user, what is your name?")
-    characterSettings.name = readlineSync.question("Enter your name: ")
+    console.log('Hello user, what is your name?')
+    characterSettings.name = readlineSync.question('Enter your name: ')
     console.log(`Welcome, ${characterSettings.name}!`)
     startMenu()
   } catch (error) {
@@ -64,22 +61,28 @@ function main(): void {
 function startMenu() {
   let startMenuChoice: number
   do {
-    console.log("\nPrepare for a tournament fight!")
-    console.log("What do you want to do?")
-    console.log("1. Start character creation")
-    console.log("2. view information about the game")
-    console.log("3. Exit")
+    console.log('\nPrepare for a tournament fight!')
+    console.log('What do you want to do?')
+    console.log('1. Start character creation')
+    console.log('2. view information about the game')
+    console.log('3. Exit')
 
-    startMenuChoice = parseInt(readlineSync.question("Enter your choice: "))
+    startMenuChoice = parseInt(readlineSync.question('Enter your choice: '))
 
     switch (startMenuChoice) {
       case 1:
         charactercreation()
         break
       case 2:
-        console.log("\nThis is a tournament RPG game where you create a character, fight enemies, and progress through fights.")
-        console.log("You can create your character, choose their class and race, and then engage in battles against enemies.")
-        console.log("strength, dexterity, constitution, intelligence, and wisdom are the primary stats that define your character's abilities.")
+        console.log(
+          '\nThis is a tournament RPG game where you create a character, fight enemies, and progress through fights.'
+        )
+        console.log(
+          'You can create your character, choose their class and race, and then engage in battles against enemies.'
+        )
+        console.log(
+          "strength, dexterity, constitution, intelligence, and wisdom are the primary stats that define your character's abilities."
+        )
         console.log("Your character's race and class will provide additional bonuses and abilities.")
         console.log("\nThe stat strength determines your character's physical power and adds damage to attacks.")
         console.log("The stat dexterity affects your character's ability to hit the enemy and evade attacks.")
@@ -88,11 +91,11 @@ function startMenu() {
         console.log("The stat wisdom affects your character's ability to heal.\n")
         break
       case 3:
-        console.log("Exiting game...")
+        console.log('Exiting game...')
         break
       default:
-        console.log("Invalid choice. Please try again.")
-        throw new Error("Invalid choice")
+        console.log('Invalid choice. Please try again.')
+        throw new Error('Invalid choice')
     }
   } while (startMenuChoice !== 3)
 }
@@ -118,7 +121,7 @@ function charactercreation() {
 
 /**
  * This will start the actual gameplay of the game.
- * 
+ *
  * @param players The array of player characters participating in the game.
  * @param enemies The array of enemy characters participating in the game.
  */
@@ -126,7 +129,7 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
   const characters: Character[] = [...players, ...enemies]
 
   if (characters.length < 2) {
-    throw new Error("Not enough characters to start the tournament")
+    throw new Error('Not enough characters to start the tournament')
   }
 
   const roster = createTournamentRoster(characters)
@@ -142,10 +145,8 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
       const homeParticipant = match.getHomeParticipant()
       const awayParticipant = match.getAwayParticipant()
 
-      const homeCharacter =
-        roster.characterByParticipant.get(homeParticipant)
-      const awayCharacter =
-        roster.characterByParticipant.get(awayParticipant)
+      const homeCharacter = roster.characterByParticipant.get(homeParticipant)
+      const awayCharacter = roster.characterByParticipant.get(awayParticipant)
 
       if (!homeCharacter || !awayCharacter) {
         throw new Error('Could not find both characters for this match')
@@ -156,26 +157,16 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
       let firstFighter = homeCharacter
       let secondFighter = awayCharacter
 
-      if (
-        awayCharacter instanceof Player &&
-        !(homeCharacter instanceof Player)
-      ) {
+      if (awayCharacter instanceof Player && !(homeCharacter instanceof Player)) {
         firstFighter = awayCharacter
         secondFighter = homeCharacter
       }
 
-      console.log(
-        `Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`
-      )
+      console.log(`Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`)
 
-      const fight = new FightEncounterHandler<Character, Character>(
-        [firstFighter],
-        [secondFighter]
-      )
+      const fight = new FightEncounterHandler<Character, Character>([firstFighter], [secondFighter])
 
-      const winner = fight.goThroughFullFight(
-        choosingOptionDuringFight()
-      )
+      const winner = fight.goThroughFullFight(choosingOptionDuringFight())
 
       if (winner === homeCharacter) {
         match.recordResult(1, 0)
@@ -203,7 +194,6 @@ function playTheGame(players: Player[], enemies: Enemy[]): void {
   }
 
   console.log(`\nTournament winner: ${champion.getName()}`)
-
 }
 
 /**
@@ -220,23 +210,19 @@ function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
    * @param livingOpponents The array of living opponents of the player.
    * @returns The action chosen by the player for their turn.
    */
-    const choosePlayerAction: ChoosePlayerAction<Character, Character> = (
-    character,
-    livingAllies,
-    livingOpponents
-  ) => {
+  const choosePlayerAction: ChoosePlayerAction<Character, Character> = (character, livingAllies, livingOpponents) => {
     if (!(character instanceof Player)) {
       return {
         type: 'attack',
         target: livingOpponents[0],
       }
     }
-      console.log('\n--- Fight status ---')
-  console.log(`${character.getName()}: ${character.getCurrentHitpoints()} HP`)
+    console.log('\n--- Fight status ---')
+    console.log(`${character.getName()}: ${character.getCurrentHitpoints()} HP`)
 
-  for (const enemy of livingOpponents) {
-    console.log(`${enemy.getName()}: ${enemy.getCurrentHitpoints()} HP`)
-  }
+    for (const enemy of livingOpponents) {
+      console.log(`${enemy.getName()}: ${enemy.getCurrentHitpoints()} HP`)
+    }
     let choice: string
 
     do {
@@ -279,38 +265,38 @@ function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
  * @throws {Error} If the user enters an invalid choice.
  * @returns {void} This function does not return a value.
  */
-  function chooseCharacterClass() {
-    for (const [characterClass, classData] of Object.entries(CharacterClasses)) {
-        console.log(`${characterClass}:`)
-        console.log(`strengthbonus: ${classData.strengthBonus}`)
-        console.log(`dexteritybonus: ${classData.dexterityBonus}`)
-        console.log(`constitutionbonus: ${classData.constitutionBonus}`)
-        console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
-        console.log(`wisdombonus: ${classData.wisdomBonus}\n`)
+function chooseCharacterClass() {
+  for (const [characterClass, classData] of Object.entries(CharacterClasses)) {
+    console.log(`${characterClass}:`)
+    console.log(`strengthbonus: ${classData.strengthBonus}`)
+    console.log(`dexteritybonus: ${classData.dexterityBonus}`)
+    console.log(`constitutionbonus: ${classData.constitutionBonus}`)
+    console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
+    console.log(`wisdombonus: ${classData.wisdomBonus}\n`)
+  }
+  let characterClassChoice
+  do {
+    characterClassChoice = parseInt(readlineSync.question('Enter your choice: '))
+    if (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4) {
+      console.log('Invalid choice. Please try again.')
     }
-   let characterClassChoice;
-    do {
-      characterClassChoice = parseInt(readlineSync.question("Enter your choice: "))
-      if (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4) {
-        console.log("Invalid choice. Please try again.")
-      }
-    } while (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4)
+  } while (isNaN(characterClassChoice) || characterClassChoice < 1 || characterClassChoice > 4)
 
   switch (characterClassChoice) {
     case 1:
-      characterSettings.characterClass = CharacterClasses.FIGHTER;
+      characterSettings.characterClass = CharacterClasses.FIGHTER
       break
     case 2:
-      characterSettings.characterClass = CharacterClasses.ROGUE;
+      characterSettings.characterClass = CharacterClasses.ROGUE
       break
     case 3:
-      characterSettings.characterClass = CharacterClasses.MAGE;
+      characterSettings.characterClass = CharacterClasses.MAGE
       break
     case 4:
-      characterSettings.characterClass = CharacterClasses.CLERIC;
+      characterSettings.characterClass = CharacterClasses.CLERIC
       break
     default:
-      console.log("Invalid choice. Please try again.")
+      console.log('Invalid choice. Please try again.')
       break
   }
 }
@@ -320,85 +306,81 @@ function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
  */
 function createCharacterStats() {
   const dice = new Dice()
-    const strengthArr = dice.rollDice(3, 6)
-    const dexterityArr = dice.rollDice(3, 6)
-    const constitutionArr = dice.rollDice(3, 6)
-    const intelligenceArr = dice.rollDice(3, 6)
-    const wisdomArr = dice.rollDice(3, 6)
+  const strengthArr = dice.rollDice(3, 6)
+  const dexterityArr = dice.rollDice(3, 6)
+  const constitutionArr = dice.rollDice(3, 6)
+  const intelligenceArr = dice.rollDice(3, 6)
+  const wisdomArr = dice.rollDice(3, 6)
   characterSettings.stats = {
     strength: strengthArr.reduce((a, b) => a + b, 0),
     dexterity: dexterityArr.reduce((a, b) => a + b, 0),
     constitution: constitutionArr.reduce((a, b) => a + b, 0),
     intelligence: intelligenceArr.reduce((a, b) => a + b, 0),
-    wisdom: wisdomArr.reduce((a, b) => a + b, 0)
+    wisdom: wisdomArr.reduce((a, b) => a + b, 0),
   }
-  console.log("Character stats have been generated:", characterSettings.stats)
+  console.log('Character stats have been generated:', characterSettings.stats)
 }
 
 /**
  * Displays the character race selection menu and handles the user's choice.
  */
 function chooseCharacterRace() {
-    for (const [Race, raceData] of Object.entries(Races)) {
-        console.log(`${Race}:`)
-        console.log(`strengthbonus: ${raceData.strengthBonus}`)
-        console.log(`dexteritybonus: ${raceData.dexterityBonus}`)
-        console.log(`constitutionbonus: ${raceData.constitutionBonus}`)
-        console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
-        console.log(`wisdombonus: ${raceData.wisdomBonus}\n`)
+  for (const [Race, raceData] of Object.entries(Races)) {
+    console.log(`${Race}:`)
+    console.log(`strengthbonus: ${raceData.strengthBonus}`)
+    console.log(`dexteritybonus: ${raceData.dexterityBonus}`)
+    console.log(`constitutionbonus: ${raceData.constitutionBonus}`)
+    console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
+    console.log(`wisdombonus: ${raceData.wisdomBonus}\n`)
+  }
+  let raceChoice
+  do {
+    raceChoice = parseInt(readlineSync.question('Enter your choice: '))
+    if (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5) {
+      console.log('Invalid choice. Please try again.')
     }
-    let raceChoice;
-    do {
-      raceChoice = parseInt(readlineSync.question("Enter your choice: "))
-      if (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5) {
-        console.log("Invalid choice. Please try again.")
-      }
-    } while (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5)
-
+  } while (isNaN(raceChoice) || raceChoice < 1 || raceChoice > 5)
 
   switch (raceChoice) {
     case 1:
-      characterSettings.race = Races.HUMAN;
+      characterSettings.race = Races.HUMAN
       break
     case 2:
-      characterSettings.race = Races.ELF;
+      characterSettings.race = Races.ELF
       break
     case 3:
-      characterSettings.race = Races.DWARF;
+      characterSettings.race = Races.DWARF
       break
     case 4:
-      characterSettings.race = Races.GNOME;
+      characterSettings.race = Races.GNOME
       break
     case 5:
-      characterSettings.race = Races.ORC;
+      characterSettings.race = Races.ORC
       break
     default:
-      console.log("Invalid choice. Please try again.")
+      console.log('Invalid choice. Please try again.')
       break
   }
 }
 
 /**
  * Prompts the user to decide the number of enemies for the game and updates the enemy settings accordingly.
- * 
+ *
  * @returns The number of enemies decided by the user.
  */
 function decideEnemyNumber(): number {
-  console.log("This is a tournament fighter, so it needs to be balanced.")
-  let numberOfEnemies: number;
+  console.log('This is a tournament fighter, so it needs to be balanced.')
+  let numberOfEnemies: number
   do {
-    numberOfEnemies = Number(
-    readlineSync.question('Enter a positive, uneven number of enemies: '),
-  )
+    numberOfEnemies = Number(readlineSync.question('Enter a positive, uneven number of enemies: '))
 
-  if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0
-  ) {
-    console.log('Enter a positive, uneven whole number.')
-  }
+    if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0) {
+      console.log('Enter a positive, uneven whole number.')
+    }
   } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
 
   console.log(`Number of enemies set to: ${numberOfEnemies}`)
-  return numberOfEnemies;
+  return numberOfEnemies
 }
 
 /**

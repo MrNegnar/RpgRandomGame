@@ -5,7 +5,6 @@ import type { EnemyObject } from './enemies.js'
  * Represents an enemy character in the game, extending the base Character class.
  */
 export class Enemy extends Character {
-
   /**
    * Constructs a new Enemy instance using the provided array of enemy information.
    *

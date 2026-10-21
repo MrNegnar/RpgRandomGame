@@ -2,17 +2,17 @@
  * Represents the main game logic for managing players, enemies, and tournament participants.
  */
 export class Game {
-  private players: any[] = [];
-  private enemies: any[] = [];
-  private participants: any[] = [];
+  private players: any[] = []
+  private enemies: any[] = []
+  private participants: any[] = []
 
   /**
    * Initializes a new instance of the Game class, setting up empty arrays for players, enemies, and participants.
    */
   constructor() {
-    this.players = [];
-    this.enemies = [];
-    this.participants = [];
+    this.players = []
+    this.enemies = []
+    this.participants = []
   }
 
   /**
@@ -21,7 +21,7 @@ export class Game {
    * @returns The array of participants in the tournament.
    */
   public getParticipants(): any[] {
-    return [...this.participants];
+    return [...this.participants]
   }
 
   /**
@@ -30,7 +30,7 @@ export class Game {
    * @returns The array of players in the game.
    */
   public getPlayers(): any[] {
-    return [...this.players];
+    return [...this.players]
   }
 
   /**
@@ -39,25 +39,25 @@ export class Game {
    * @returns The array of enemies in the game.
    */
   public getEnemies(): any[] {
-    return [...this.enemies];
+    return [...this.enemies]
   }
 
   /**
    * Resets the participants, players, and enemies arrays to empty arrays.
    */
   public resetParticipants(): void {
-    this.participants = [];
-    this.players = [];
-    this.enemies = [];
+    this.participants = []
+    this.players = []
+    this.enemies = []
   }
-  
+
   /**
    * Adds a player to the game.
    *
    * @param player The player to be added to the game.
    */
   public addPlayer(player: {}): void {
-    this.players.push(player);
+    this.players.push(player)
   }
 
   /**
@@ -66,7 +66,7 @@ export class Game {
    * @param enemy The enemy to be added to the game.
    */
   public addEnemy(enemy: any): void {
-    this.enemies.push(enemy);
+    this.enemies.push(enemy)
   }
 
   /**
@@ -74,8 +74,8 @@ export class Game {
    * Logs the participants to the console.
    */
   public startTournament(): void {
-    this.participants = [...this.players, ...this.enemies];
-    console.log("Tournament started with participants:", this.participants);
+    this.participants = [...this.players, ...this.enemies]
+    console.log('Tournament started with participants:', this.participants)
   }
 
   /**
@@ -84,11 +84,10 @@ export class Game {
    */
   public startFight(): void {
     if (this.participants.length < 2) {
-      console.log("Not enough participants to start a fight.");
-      return;
+      console.log('Not enough participants to start a fight.')
+      return
     }
-    const [first, second] = this.participants;
-    console.log(`Starting fight between ${first} and ${second}`);
+    const [first, second] = this.participants
+    console.log(`Starting fight between ${first} and ${second}`)
   }
-
 }

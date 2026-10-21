@@ -4,26 +4,24 @@ import type { CombatantInterface } from 'rpg-fight-encounter/src/index.js'
  * An abstract class representing a character in the tournament RPG game.
  */
 export abstract class Character implements CombatantInterface {
+  private name: string
+  private maxHealth: number
+  private currentHitpoints: number
+  private speed: number
+  private armor: number
+  private evasion: number
 
+  private strength: number
+  private dexterity: number
+  private constitution: number
+  private intelligence: number
+  private wisdom: number
 
-  private name: string;
-  private maxHealth: number;
-  private currentHitpoints: number;
-  private speed: number;
-  private armor: number;
-  private evasion: number;
-
-  private strength: number;
-  private dexterity: number;
-  private constitution: number;
-  private intelligence: number;
-  private wisdom: number;
-
-  private strengthModifier: number;
-  private dexterityModifier: number;
-  private constitutionModifier: number;
-  private intelligenceModifier: number;
-  private wisdomModifier: number;
+  private strengthModifier: number
+  private dexterityModifier: number
+  private constitutionModifier: number
+  private intelligenceModifier: number
+  private wisdomModifier: number
 
   /**
    * Constructs a new Character instance with the specified attributes.
@@ -39,14 +37,14 @@ export abstract class Character implements CombatantInterface {
    * @param characterSettings.maxHealth The maximum health of the character.
    */
   constructor(characterSettings: {
-    name: string;
-    armor: number;
-    strength: number;
-    dexterity: number;
-    constitution: number;
-    intelligence: number;
-    wisdom: number;
-    maxHealth: number;
+    name: string
+    armor: number
+    strength: number
+    dexterity: number
+    constitution: number
+    intelligence: number
+    wisdom: number
+    maxHealth: number
   }) {
     this.name = characterSettings.name
     this.armor = characterSettings.armor
@@ -206,7 +204,7 @@ export abstract class Character implements CombatantInterface {
 
   /**
    * Validates whether the character is still alive based on current hit points.
-   * 
+   *
    * @returns True if the character is alive (current hit points are greater than 0), otherwise false.
    */
   public isAlive(): boolean {
@@ -215,7 +213,7 @@ export abstract class Character implements CombatantInterface {
 
   /**
    * composes a string representation of the character's attributes and equipment.
-   * 
+   *
    * @returns A string representation of the character's attributes and equipment.
    */
   public toString(): string {

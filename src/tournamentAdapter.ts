@@ -12,9 +12,7 @@ export type TournamentRoster = {
  * @param characters The array of characters to be included in the tournament.
  * @returns {TournamentRoster} The tournament roster containing participants and a mapping of participants to characters.
  */
-export function createTournamentRoster(
-  characters: Character[]
-): TournamentRoster {
+export function createTournamentRoster(characters: Character[]): TournamentRoster {
   const characterByParticipant = new Map<Participant, Character>()
 
   const participants = characters.map((character) => {

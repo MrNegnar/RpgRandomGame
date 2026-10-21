@@ -59,7 +59,6 @@ declare module 'tournament-scheduler' {
    * Represents a round in the tournament, containing multiple matches.
    */
   export class Round {
-
     /**
      * Gets the number of the round.
      */
