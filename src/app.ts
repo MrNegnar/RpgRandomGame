@@ -121,59 +121,92 @@ function charactercreation() {
  */
 function playTheGame(players: Player[], enemies: Enemy[]): void {
   const characters: Character[] = [...players, ...enemies]
+
+  if (characters.length < 2) {
+    throw new Error("Not enough characters to start the tournament")
+  }
+
   const roster = createTournamentRoster(characters)
   const scheduler = new SingleEliminationScheduler()
-  const firstRound = scheduler.createFirstRound(roster.participants)
+  const totalRounds = Math.ceil(Math.log2(characters.length))
+  let round = scheduler.createFirstRound(roster.participants)
 
-  for (const match of firstRound.getMatches()) {
-    const homeParticipant = match.getHomeParticipant()
-    const awayParticipant = match.getAwayParticipant()
+  while (true) {
+    console.log(`\n--- Round ${round.getNumber()} ---`)
 
-    const homeCharacter = roster.characterByParticipant.get(homeParticipant)
-    const awayCharacter = roster.characterByParticipant.get(awayParticipant)
+    // Den här loopen spelar alla matcher i den aktuella rundan.
+    for (const match of round.getMatches()) {
+      const homeParticipant = match.getHomeParticipant()
+      const awayParticipant = match.getAwayParticipant()
 
-    if (!homeCharacter || !awayCharacter) {
-      throw new Error('Could not find both characters for this match')
+      const homeCharacter =
+        roster.characterByParticipant.get(homeParticipant)
+      const awayCharacter =
+        roster.characterByParticipant.get(awayParticipant)
+
+      if (!homeCharacter || !awayCharacter) {
+        throw new Error('Could not find both characters for this match')
+      }
+
+      // Fightmodulens valfunktion används av första sidan.
+      // Flytta spelaren dit om hen annars är matchens bortadeltagare.
+      let firstFighter = homeCharacter
+      let secondFighter = awayCharacter
+
+      if (
+        awayCharacter instanceof Player &&
+        !(homeCharacter instanceof Player)
+      ) {
+        firstFighter = awayCharacter
+        secondFighter = homeCharacter
+      }
+
+      console.log(
+        `Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`
+      )
+
+      const fight = new FightEncounterHandler<Character, Character>(
+        [firstFighter],
+        [secondFighter]
+      )
+
+      const winner = fight.goThroughFullFight(
+        choosingOptionDuringFight()
+      )
+
+      if (winner === homeCharacter) {
+        match.recordResult(1, 0)
+      } else if (winner === awayCharacter) {
+        match.recordResult(0, 1)
+      } else {
+        throw new Error('Fight returned a winner outside this match')
+      }
     }
 
-    // Fightmodulen låter första sidan använda valfunktionen.
-    // Flytta därför spelaren dit om spelaren är matchens bortadeltagare.
-    let firstFighter = homeCharacter
-    let secondFighter = awayCharacter
-
-    if (
-      awayCharacter instanceof Player &&
-      !(homeCharacter instanceof Player)
-    ) {
-      firstFighter = awayCharacter
-      secondFighter = homeCharacter
+    // Alla matcher i sista rundan är spelade.
+    if (round.getNumber() === totalRounds) {
+      break
     }
 
-    console.log(
-      `Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`
-    )
-
-    const fight = new FightEncounterHandler<Character, Character>(
-      [firstFighter],
-      [secondFighter]
-    )
-
-    const winner = fight.goThroughFullFight(choosingOptionDuringFight())
-
-    if (winner === homeCharacter) {
-      match.recordResult(1, 0)
-    } else if (winner === awayCharacter) {
-      match.recordResult(0, 1)
-    } else {
-      throw new Error('Fight returned a winner outside this match')
-    }
+    // Schemaläggaren tar vinnarna och skapar nästa runda.
+    round = scheduler.createNextRound()
   }
+
+  const finalMatch = round.getMatches()[0]
+  const champion = finalMatch.getWinner()
+
+  if (!champion) {
+    throw new Error('The final match has no winner')
+  }
+
+  console.log(`Tournament winner: ${champion.getName()}`)
+
 }
 
 /**
  * Handles the player's action choice during a fight encounter.
  *
- * @returns {ChoosePlayerAction<Player, Enemy>} The function that determines the player's actions during their turn.
+ * @returns {ChoosePlayerAction<Character, Character>} The function that determines the player's actions during their turn.
  */
 function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
   /**
