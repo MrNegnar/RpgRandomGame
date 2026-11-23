@@ -1,5 +1,4 @@
 import { CharacterClasses } from './tournamentRpgCharacter/characterClasses.js'
-import readlineSync from 'readline-sync'
 import { Races } from './tournamentRpgCharacter/Race.js'
 import { Dice } from 'rpg-fight-encounter'
 /**
@@ -22,12 +21,23 @@ export class Charactercreation {
   }
 
   /**
+   * The Counstructor goes through the process of creating a character.
    *
+   * @param name - The name of the user given to the character.
    */
-  constructor() {
+  constructor(name: string) {
+    this.characterSettings.name = name
     this.createStats()
     this.chooseClass()
     this.chooseRace()
+  }
+
+  /**
+   * Gives away the object of the character.
+   *
+   * @returns The settings of the character
+   */
+  public getCharacterSettings() {
     return this.characterSettings
   }
 
@@ -36,17 +46,12 @@ export class Charactercreation {
    */
   createStats() {
     const dice = new Dice()
-      const strengthArr = dice.rollDice(3, 6)
-      const dexterityArr = dice.rollDice(3, 6)
-      const constitutionArr = dice.rollDice(3, 6)
-      const intelligenceArr = dice.rollDice(3, 6)
-      const wisdomArr = dice.rollDice(3, 6)
       this.characterSettings.stats = {
-        strength: strengthArr.reduce((a, b) => a + b, 0),
-        dexterity: dexterityArr.reduce((a, b) => a + b, 0),
-        constitution: constitutionArr.reduce((a, b) => a + b, 0),
-        intelligence: intelligenceArr.reduce((a, b) => a + b, 0),
-        wisdom: wisdomArr.reduce((a, b) => a + b, 0),
+        strength: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
+        dexterity: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
+        constitution: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
+        intelligence: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
+        wisdom: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
       }
   }
 
@@ -130,6 +135,5 @@ export class Charactercreation {
           break
       }
   }
-
 
 }
