@@ -9,7 +9,16 @@ export const EnemyObject = {
     intelligence: 1,
     wisdom: 1,
   },
-  Rat: { name: 'Rat', maxHealth: 8, armor: 0, strength: 5, dexterity: 13, constitution: 6, intelligence: 1, wisdom: 1 },
+  Rat: {
+    name: 'Rat',
+    maxHealth: 8,
+    armor: 0,
+    strength: 5,
+    dexterity: 13,
+    constitution: 6,
+    intelligence: 1,
+    wisdom: 1,
+  },
   Skeleton: {
     name: 'Skeleton',
     maxHealth: 12,
