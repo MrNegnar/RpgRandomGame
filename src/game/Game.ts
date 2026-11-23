@@ -1,3 +1,4 @@
+import { Player } from './character/tournamentRpgCharacter/Player.js'
 /**
  * Represents the main game logic for managing players, enemies, and tournament participants.
  */
@@ -51,6 +52,14 @@ export class Game {
     this.enemies = []
   }
 
+  /**
+   * Creates an instance of the a character
+   *
+   * @param characterSettings - settings used for creating a character
+   */
+  public createPlayer(characterSettings: CharacterSettings) {
+    const player = new Player(characterSettings)
+  }
   /**
    * Adds a player to the game.
    *
