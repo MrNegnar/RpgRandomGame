@@ -1,8 +1,13 @@
 import { Player } from './character/tournamentRpgCharacter/Player.js'
 import { Enemy } from './character/tournamentRpgCharacter/Enemy.js'
+import { Character } from './character/tournamentRpgCharacter/Character.js'
 import { EnemyObject } from './character/tournamentRpgCharacter/enemies.js'
 import { SingleEliminationScheduler } from 'tournament-scheduler'
 import { createTournamentRoster } from '../tournamentAdapter.js'
+import {
+  FightEncounterHandlerV02 as FightEncounterHandler,
+  type ChoosePlayerActionV02 as ChoosePlayerAction,
+} from 'rpg-fight-encounter'
 
 import type { CharacterSettings } from './character/CharacterCreation.js'
 
@@ -13,6 +18,11 @@ export class Game {
   private players: any[] = []
   private enemies: any[] = []
   private participants: any[] = []
+
+  private roster: any
+  private scheduler: SingleEliminationScheduler
+  private totalRounds: number = 0
+  private currentRound: any
 
   /**
    * Initializes a new instance of the Game class, setting up empty arrays for players, enemies, and participants.
@@ -84,7 +94,7 @@ export class Game {
    * @param numberOfEnemies - How many enemies that will be created.
    */
   public createEnemy(numberOfEnemies: number): void {
-    for (let i = 0; i < numberOfEnemies; i++) {
+    for (let i = 0; i <= numberOfEnemies; i++) {
       const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
       const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
       const enemy = new Enemy(EnemyObject[name])
@@ -108,13 +118,79 @@ export class Game {
     if (this.participants.length < 2) {
       throw new Error('Not enough characters to start the tournament')
     }
+
+    this.roster = createTournamentRoster(this.participants)
+    this.scheduler = new SingleEliminationScheduler()
+    this.totalRounds = Math.ceil(Math.log2(this.participants.length))
+    this.currentRound = this.scheduler.createFirstRound(this.roster.participants)
   }
 
+
+
+
   /**
-   * Plays the tournament.
+   *
    */
-  public playTournament(): void {
-    // TODO: Implementation
+  public playTournament(choosePlayerAction: ChoosePlayerAction<Character, Character>): any {
+
+
+  while (true) {
+    console.log(`\n--- Round ${this.currentRound.getNumber()} ---`)
+
+    // Den här loopen spelar alla matcher i den aktuella rundan.
+    for (const match of this.currentRound.getMatches()) {
+      const homeParticipant = match.getHomeParticipant()
+      const awayParticipant = match.getAwayParticipant()
+
+      const homeCharacter = this.roster.characterByParticipant.get(homeParticipant)
+      const awayCharacter = this.roster.characterByParticipant.get(awayParticipant)
+
+      if (!homeCharacter || !awayCharacter) {
+        throw new Error('Could not find both characters for this match')
+      }
+
+      // Fightmodulens valfunktion används av första sidan.
+      // Flytta spelaren dit om hen annars är matchens bortadeltagare.
+      let firstFighter = homeCharacter
+      let secondFighter = awayCharacter
+
+      if (awayCharacter instanceof Player && !(homeCharacter instanceof Player)) {
+        firstFighter = awayCharacter
+        secondFighter = homeCharacter
+      }
+
+      console.log(`Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`)
+
+      const fight = new FightEncounterHandler<Character, Character>([firstFighter], [secondFighter])
+
+      const winner = fight.goThroughFullFight(choosingOptionDuringFight())
+
+      if (winner === homeCharacter) {
+        match.recordResult(1, 0)
+      } else if (winner === awayCharacter) {
+        match.recordResult(0, 1)
+      } else {
+        throw new Error('Fight returned a winner outside this match')
+      }
+    }
+
+    // Alla matcher i sista rundan är spelade.
+    if (this.currentRound.getNumber() === this.totalRounds) {
+      break
+    }
+
+    // Schemaläggaren tar vinnarna och skapar nästa runda.
+    this.currentRound = this.scheduler.createNextRound()
+  }
+
+  const finalMatch = this.currentRound.getMatches()[0]
+  const champion = finalMatch.getWinner()
+
+  if (!champion) {
+    throw new Error('The final match has no winner')
+  }
+
+  console.log(`\nTournament winner: ${champion.getName()}`)
   }
 
   /**
