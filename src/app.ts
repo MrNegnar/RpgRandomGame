@@ -56,13 +56,9 @@ function startMenu() {
 
     switch (startMenuChoice) {
       case 1:
-        // Reset the game state before starting character creation.
-        // This is necessary to ensure that any previous game state does not interfere with the new character creation process.
-        game.resetParticipants()
-
-        charactercreating()
-        enemyCreation()
+        prepareGame()
         playTheGame(game.getPlayers(), game.getEnemies())
+        game.playTournament
         break
       case 2:
         console.log(
@@ -89,6 +85,19 @@ function startMenu() {
         throw new Error('Invalid choice')
     }
   } while (startMenuChoice !== 3)
+}
+
+/**
+ * Setting up the game before start
+ */
+function prepareGame() {
+  // Reset the game state before starting character creation.
+  // This is necessary to ensure that any previous game state does not interfere with the new character creation process.
+  game.resetParticipants()
+
+  charactercreating()
+  const howManyEnemies = decideEnemyNumber()
+  game.createEnemy(howManyEnemies)
 }
 
 /**
@@ -152,31 +161,21 @@ function chooseClass() {
  * @returns The number of enemies decided by the user.
  */
 function decideEnemyNumber(): number {
-  let numberOfEnemies
+  let numberOfEnemies = 0
   do {
-  try {
-    console.log('This is a tournament fighter, so it needs to be balanced.')
-    numberOfEnemies = Number(readlineSync.question('Enter a positive, uneven number of enemies: '))
-    if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0) {
-      throw Error('Invalid number of enemies')
+    try {
+      console.log('This is a tournament fighter, so it needs to be balanced.')
+      numberOfEnemies = Number(readlineSync.question('Enter a positive, uneven number of enemies: '))
+      if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0) {
+        throw Error('Invalid number of enemies')
+      }
+    } catch (error) {
+      console.error('Cannot choose this number of enemies:', (error as Error).message)
     }
-  } catch (error) {
-    console.error('Cannot choose this number of enemies:', (error as Error).message)
-  }
-} while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
+  } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
 
   console.log(`Number of enemies set to: ${numberOfEnemies}`)
   return numberOfEnemies
-}
-
-
-/**
- *
- */
-function enemyCreation(numberOfEnemies: number) {
-  for (let i = 0; i <= numberOfEnemies; i++) {
-    game.createEnemy(numberOfEnemies)
-  }
 }
 
 /**
@@ -186,74 +185,7 @@ function enemyCreation(numberOfEnemies: number) {
  * @param enemies The array of enemy characters participating in the game.
  */
 function playTheGame(players: Player[], enemies: Enemy[]): void {
-  const characters: Character[] = [...players, ...enemies]
 
-  if (characters.length < 2) {
-    throw new Error('Not enough characters to start the tournament')
-  }
-
-  const roster = createTournamentRoster(characters)
-  const scheduler = new SingleEliminationScheduler()
-  const totalRounds = Math.ceil(Math.log2(characters.length))
-  let round = scheduler.createFirstRound(roster.participants)
-
-  while (true) {
-    console.log(`\n--- Round ${round.getNumber()} ---`)
-
-    // Den här loopen spelar alla matcher i den aktuella rundan.
-    for (const match of round.getMatches()) {
-      const homeParticipant = match.getHomeParticipant()
-      const awayParticipant = match.getAwayParticipant()
-
-      const homeCharacter = roster.characterByParticipant.get(homeParticipant)
-      const awayCharacter = roster.characterByParticipant.get(awayParticipant)
-
-      if (!homeCharacter || !awayCharacter) {
-        throw new Error('Could not find both characters for this match')
-      }
-
-      // Fightmodulens valfunktion används av första sidan.
-      // Flytta spelaren dit om hen annars är matchens bortadeltagare.
-      let firstFighter = homeCharacter
-      let secondFighter = awayCharacter
-
-      if (awayCharacter instanceof Player && !(homeCharacter instanceof Player)) {
-        firstFighter = awayCharacter
-        secondFighter = homeCharacter
-      }
-
-      console.log(`Match: ${homeParticipant.getName()} vs ${awayParticipant.getName()}`)
-
-      const fight = new FightEncounterHandler<Character, Character>([firstFighter], [secondFighter])
-
-      const winner = fight.goThroughFullFight(choosingOptionDuringFight())
-
-      if (winner === homeCharacter) {
-        match.recordResult(1, 0)
-      } else if (winner === awayCharacter) {
-        match.recordResult(0, 1)
-      } else {
-        throw new Error('Fight returned a winner outside this match')
-      }
-    }
-
-    // Alla matcher i sista rundan är spelade.
-    if (round.getNumber() === totalRounds) {
-      break
-    }
-
-    // Schemaläggaren tar vinnarna och skapar nästa runda.
-    round = scheduler.createNextRound()
-  }
-
-  const finalMatch = round.getMatches()[0]
-  const champion = finalMatch.getWinner()
-
-  if (!champion) {
-    throw new Error('The final match has no winner')
-  }
-
-  console.log(`\nTournament winner: ${champion.getName()}`)
 }
 
 /**
