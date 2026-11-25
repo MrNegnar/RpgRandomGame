@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
 import readlineSync from 'readline-sync'
-import { Character } from './game/character/tournamentRpgCharacter/Character.js'
-import { Player } from './game/character/tournamentRpgCharacter/Player.js'
-import { Enemy } from './game/character/tournamentRpgCharacter/Enemy.js'
+import { CharacterClasses } from './game/character/tournamentRpgCharacter/characterClasses.js'
+import { Races } from './game/character/tournamentRpgCharacter/Race.js'
 import { Charactercreation } from './game/character/CharacterCreation.js'
 import { Game } from './game/Game.js'
-import { Dice } from 'rpg-fight-encounter'
 import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 import {
   FightEncounterHandlerV02 as FightEncounterHandler,
   type ChoosePlayerActionV02 as ChoosePlayerAction,
 } from 'rpg-fight-encounter'
+
 import { SingleEliminationScheduler } from 'tournament-scheduler'
 import { createTournamentRoster } from './tournamentAdapter.js'
 
 const game = new Game()
+const characterCreator = new Charactercreation()
 let userName = ''
 
 /**
@@ -59,8 +59,10 @@ function startMenu() {
         // Reset the game state before starting character creation.
         // This is necessary to ensure that any previous game state does not interfere with the new character creation process.
         game.resetParticipants()
-        const characterSettings = new Charactercreation()
-        game.createPlayer(characterSettings)
+
+        charactercreating()
+        enemyCreation()
+        playTheGame(game.getPlayers(), game.getEnemies())
         break
       case 2:
         console.log(
@@ -90,20 +92,69 @@ function startMenu() {
 }
 
 /**
- * Handles the overall character creation process, including class, stats, and race selection, and adds the player to the game.
+ * Handles the overall character creation process,
+ * including class, stats, and race selection, and adds the player to the game.
  */
-function charactercreation() {
+function charactercreating() {
 
-  createCharacterStats()
-  chooseCharacterClass()
-  chooseCharacterRace()
-  const player = new Player(characterSettings)
-  game.addPlayer(player)
-  const howMamyEnemies = decideEnemyNumber()
-  for (let i = 0; i < howMamyEnemies; i++) {
-    createEnemy()
+  characterCreator.createStats()
+  console.log(characterCreator.getStats())
+
+  characterCreator.setRace(chooseRace())
+  characterCreator.setClass(chooseClass())
+  game.createPlayer(characterCreator.getCharacterSettings)
+}
+
+/**
+ * logs a list of races and lets the user choose which it wants.
+ *
+ * @returns The choosen race of the user.
+ */
+function chooseRace() {
+  let raceCounter = 1
+        for (const [Race, raceData] of Object.entries(Races)) {
+          console.log(`${raceCounter}: ${Race}:`)
+          console.log(`strengthbonus: ${raceData.strengthBonus}`)
+          console.log(`dexteritybonus: ${raceData.dexterityBonus}`)
+          console.log(`constitutionbonus: ${raceData.constitutionBonus}`)
+          console.log(`intelligencebonus: ${raceData.intelligenceBonus}`)
+          console.log(`wisdombonus: ${raceData.wisdomBonus}\n`)
+          raceCounter++
+        }
+  const raceChoice = parseInt(readlineSync.question('Enter your choice: '))
+
+  return Object.values(Races)[raceChoice -1]
+}
+
+/**
+ * logs a list of classes and lets the user choose which it wants.
+ *
+ * @returns The choosen class of the user.
+ */
+function chooseClass() {
+  let classCounter = 1
+  for (const [characterClass, classData] of Object.entries(CharacterClasses)) {
+    console.log(`${classCounter}: ${characterClass}:`)
+    console.log(`strengthbonus: ${classData.strengthBonus}`)
+    console.log(`dexteritybonus: ${classData.dexterityBonus}`)
+    console.log(`constitutionbonus: ${classData.constitutionBonus}`)
+    console.log(`intelligencebonus: ${classData.intelligenceBonus}`)
+    console.log(`wisdombonus: ${classData.wisdomBonus}\n`)
+    classCounter++
   }
-  playTheGame(game.getPlayers(), game.getEnemies())
+  const classChoice = parseInt(readlineSync.question('Enter your choice: '))
+
+  return Object.values(CharacterClasses)[classChoice -1]
+}
+
+/**
+ *
+ */
+function enemyCreation() {
+          const howMamyEnemies = decideEnemyNumber()
+          for (let i = 0; i < howMamyEnemies; i++) {
+            createEnemy()
+          }
 }
 
 /**
@@ -244,16 +295,6 @@ function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
     }
   }
   return choosePlayerAction
-}
-
-/**
- * Displays the character class selection menu and handles the user's choice.
- *
- * @throws {Error} If the user enters an invalid choice.
- * @returns {void} This function does not return a value.
- */
-function chooseCharacterClass() {
-
 }
 
 /**
