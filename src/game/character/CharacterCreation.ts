@@ -4,8 +4,8 @@ import { Dice } from 'rpg-fight-encounter'
 
   export interface CharacterSettings {
     name: string
-    characterClass: (typeof CharacterClasses)[keyof typeof CharacterClasses]
-    race: (typeof Races)[keyof typeof Races]
+    characterClass: (typeof CharacterClasses)[keyof typeof CharacterClasses] | undefined
+    race: (typeof Races)[keyof typeof Races] | undefined
     armor: number
     stats: {
     strength: number
@@ -41,8 +41,17 @@ export class Charactercreation {
    *
    * @returns The settings of the character
    */
-  public getCharacterSettings(): object {
+  public getCharacterSettings(): CharacterSettings {
     return this.characterSettings
+  }
+
+  /**
+   * Sets the name of the character being created.
+   *
+   * @param name The name given to the character
+   */
+  public setName(name: string): void {
+    this.characterSettings.name = name
   }
 
   /**
@@ -50,7 +59,7 @@ export class Charactercreation {
    *
    * @returns stats - the stats of the character.
    */
-  createStats(): object {
+  createStats() {
     const dice = new Dice()
       this.characterSettings.stats = {
         strength: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
