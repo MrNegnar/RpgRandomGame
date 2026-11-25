@@ -97,12 +97,11 @@ function startMenu() {
  */
 function charactercreating() {
 
-  characterCreator.createStats()
-  console.log(characterCreator.getStats())
-
+  console.log(characterCreator.createStats())
+  characterCreator.setName(userName)
   characterCreator.setRace(chooseRace())
   characterCreator.setClass(chooseClass())
-  game.createPlayer(characterCreator.getCharacterSettings)
+  game.createPlayer(characterCreator.getCharacterSettings())
 }
 
 /**
@@ -148,13 +147,36 @@ function chooseClass() {
 }
 
 /**
+ * Prompts the user to decide the number of enemies for the game and updates the enemy settings accordingly.
+ *
+ * @returns The number of enemies decided by the user.
+ */
+function decideEnemyNumber(): number {
+  let numberOfEnemies
+  do {
+  try {
+    console.log('This is a tournament fighter, so it needs to be balanced.')
+    numberOfEnemies = Number(readlineSync.question('Enter a positive, uneven number of enemies: '))
+    if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0) {
+      throw Error('Invalid number of enemies')
+    }
+  } catch (error) {
+    console.error('Cannot choose this number of enemies:', (error as Error).message)
+  }
+} while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
+
+  console.log(`Number of enemies set to: ${numberOfEnemies}`)
+  return numberOfEnemies
+}
+
+
+/**
  *
  */
-function enemyCreation() {
-          const howMamyEnemies = decideEnemyNumber()
-          for (let i = 0; i < howMamyEnemies; i++) {
-            createEnemy()
-          }
+function enemyCreation(numberOfEnemies: number) {
+  for (let i = 0; i <= numberOfEnemies; i++) {
+    game.createEnemy(numberOfEnemies)
+  }
 }
 
 /**
@@ -295,38 +317,6 @@ function choosingOptionDuringFight(): ChoosePlayerAction<Character, Character> {
     }
   }
   return choosePlayerAction
-}
-
-/**
- * Prompts the user to decide the number of enemies for the game and updates the enemy settings accordingly.
- *
- * @returns The number of enemies decided by the user.
- */
-function decideEnemyNumber(): number {
-  console.log('This is a tournament fighter, so it needs to be balanced.')
-  let numberOfEnemies: number
-  do {
-    numberOfEnemies = Number(readlineSync.question('Enter a positive, uneven number of enemies: '))
-
-    if (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0) {
-      console.log('Enter a positive, uneven whole number.')
-    }
-  } while (!Number.isInteger(numberOfEnemies) || numberOfEnemies <= 0 || numberOfEnemies % 2 == 0)
-
-  console.log(`Number of enemies set to: ${numberOfEnemies}`)
-  return numberOfEnemies
-}
-
-/**
- * Creates enemy characters for the game based on the enemy settings.
- * Creates a single enemy character and adds it to the game.
- *
- */
-function createEnemy(): void {
-  const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
-  const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
-  const enemy = new Enemy(EnemyObject[name])
-  game.addEnemy(enemy)
 }
 
 main()

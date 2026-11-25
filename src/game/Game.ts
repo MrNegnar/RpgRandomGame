@@ -1,4 +1,11 @@
 import { Player } from './character/tournamentRpgCharacter/Player.js'
+import { Enemy } from './character/tournamentRpgCharacter/Enemy.js'
+import { EnemyObject } from './character/tournamentRpgCharacter/enemies.js'
+import { SingleEliminationScheduler } from 'tournament-scheduler'
+import { createTournamentRoster } from '../tournamentAdapter.js'
+
+import type { CharacterSettings } from './character/CharacterCreation.js'
+
 /**
  * Represents the main game logic for managing players, enemies, and tournament participants.
  */
@@ -57,24 +64,36 @@ export class Game {
    *
    * @param characterSettings - settings used for creating a character
    */
-  public createPlayer(characterSettings: CharacterSettings) {
+  public createPlayer(characterSettings: CharacterSettings): void {
     const player = new Player(characterSettings)
+    this.addPlayer(player)
   }
   /**
    * Adds a player to the game.
    *
    * @param player The player to be added to the game.
    */
-  public addPlayer(player: {}): void {
+  private addPlayer(player: object): void {
     this.players.push(player)
   }
 
+  /**
+   * Creates enemy characters for the game based on the enemy settings.
+   * Creates a single enemy character and adds it to the game.
+   *
+   */
+  public createEnemy(): void {
+    const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
+    const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
+    const enemy = new Enemy(EnemyObject[name])
+    this.addEnemy(enemy)
+  }
   /**
    * Adds an enemy to the game.
    *
    * @param enemy The enemy to be added to the game.
    */
-  public addEnemy(enemy: any): void {
+  private addEnemy(enemy: any): void {
     this.enemies.push(enemy)
   }
 
