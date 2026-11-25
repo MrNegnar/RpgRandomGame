@@ -1,6 +1,22 @@
 import { CharacterClasses } from './tournamentRpgCharacter/characterClasses.js'
 import { Races } from './tournamentRpgCharacter/Race.js'
 import { Dice } from 'rpg-fight-encounter'
+
+  export interface CharacterSettings {
+    name: string
+    characterClass: (typeof CharacterClasses)[keyof typeof CharacterClasses]
+    race: (typeof Races)[keyof typeof Races]
+    armor: number
+    stats: {
+    strength: number
+    dexterity: number
+    constitution: number
+    intelligence: number
+    wisdom: number
+  }
+  maxHealth: number
+  }
+
 /**
  * Creates full record for a new character
  */
@@ -21,20 +37,11 @@ export class Charactercreation {
   }
 
   /**
-   * Gets the stats of the character being created.
-   *
-   * @returns The stats of the character.
-   */
-  public getStats() {
-    return this.characterSettings.stats
-  }
-
-  /**
    * Gives away the object of the character.
    *
    * @returns The settings of the character
    */
-  public getCharacterSettings() {
+  public getCharacterSettings(): object {
     return this.characterSettings
   }
 
@@ -43,7 +50,7 @@ export class Charactercreation {
    *
    * @returns stats - the stats of the character.
    */
-  createStats() {
+  createStats(): object {
     const dice = new Dice()
       this.characterSettings.stats = {
         strength: dice.rollDice(3, 6).reduce((a, b) => a + b, 0),
@@ -60,7 +67,7 @@ export class Charactercreation {
    *
    * @param classChoice - the choosen class that will be set
    */
-  public setClass(classChoice: (typeof CharacterClasses)[keyof typeof CharacterClasses]) {
+  public setClass(classChoice: (typeof CharacterClasses)[keyof typeof CharacterClasses]): void {
     this.characterSettings.characterClass = classChoice
   }
 
@@ -69,7 +76,7 @@ export class Charactercreation {
    *
    * @param raceChoice - the choosen race that will be set
    */
-  public setRace(raceChoice: (typeof Races)[keyof typeof Races]) {
+  public setRace(raceChoice: (typeof Races)[keyof typeof Races]): void {
     this.characterSettings.race = raceChoice
   }
 
