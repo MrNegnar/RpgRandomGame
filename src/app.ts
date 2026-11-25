@@ -5,14 +5,12 @@ import { CharacterClasses } from './game/character/tournamentRpgCharacter/charac
 import { Races } from './game/character/tournamentRpgCharacter/Race.js'
 import { Charactercreation } from './game/character/CharacterCreation.js'
 import { Game } from './game/Game.js'
-import { EnemyObject } from './game/character/tournamentRpgCharacter/enemies.js'
 import {
   FightEncounterHandlerV02 as FightEncounterHandler,
   type ChoosePlayerActionV02 as ChoosePlayerAction,
 } from 'rpg-fight-encounter'
 
-import { SingleEliminationScheduler } from 'tournament-scheduler'
-import { createTournamentRoster } from './tournamentAdapter.js'
+
 
 const game = new Game()
 const characterCreator = new Charactercreation()
@@ -56,9 +54,9 @@ function startMenu() {
 
     switch (startMenuChoice) {
       case 1:
-        prepareGame()
-        playTheGame(game.getPlayers(), game.getEnemies())
-        game.playTournament
+        prepareCharacters()
+        game.prepareTournament()
+        playTournament()
         break
       case 2:
         console.log(
@@ -90,7 +88,7 @@ function startMenu() {
 /**
  * Setting up the game before start
  */
-function prepareGame() {
+function prepareCharacters() {
   // Reset the game state before starting character creation.
   // This is necessary to ensure that any previous game state does not interfere with the new character creation process.
   game.resetParticipants()
@@ -105,7 +103,6 @@ function prepareGame() {
  * including class, stats, and race selection, and adds the player to the game.
  */
 function charactercreating() {
-
   console.log(characterCreator.createStats())
   characterCreator.setName(userName)
   characterCreator.setRace(chooseRace())
@@ -178,15 +175,20 @@ function decideEnemyNumber(): number {
   return numberOfEnemies
 }
 
-/**
- * This will start the actual gameplay of the game.
- *
- * @param players The array of player characters participating in the game.
- * @param enemies The array of enemy characters participating in the game.
- */
-function playTheGame(players: Player[], enemies: Enemy[]): void {
+
+
+
+
+
+
+function playTournament() {
 
 }
+
+
+
+
+
 
 /**
  * Handles the player's action choice during a fight encounter.

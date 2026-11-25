@@ -81,12 +81,15 @@ export class Game {
    * Creates enemy characters for the game based on the enemy settings.
    * Creates a single enemy character and adds it to the game.
    *
+   * @param numberOfEnemies - How many enemies that will be created.
    */
-  public createEnemy(): void {
-    const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
-    const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
-    const enemy = new Enemy(EnemyObject[name])
-    this.addEnemy(enemy)
+  public createEnemy(numberOfEnemies: number): void {
+    for (let i = 0; i < numberOfEnemies; i++) {
+      const enemyNames = Object.keys(EnemyObject) as Array<keyof typeof EnemyObject>
+      const name = enemyNames[Math.floor(Math.random() * enemyNames.length)]
+      const enemy = new Enemy(EnemyObject[name])
+      this.addEnemy(enemy)
+    }
   }
   /**
    * Adds an enemy to the game.
@@ -98,12 +101,20 @@ export class Game {
   }
 
   /**
-   * Starts the tournament by combining all players and enemies into the participants array.
-   * Logs the participants to the console.
+   * Prepares the tournament by combining all players and enemies into the participants array.
    */
-  public startTournament(): void {
+  public prepareTournament(): void {
     this.participants = [...this.players, ...this.enemies]
-    console.log('Tournament started with participants:', this.participants)
+    if (this.participants.length < 2) {
+      throw new Error('Not enough characters to start the tournament')
+    }
+  }
+
+  /**
+   * Plays the tournament.
+   */
+  public playTournament(): void {
+    // TODO: Implementation
   }
 
   /**
